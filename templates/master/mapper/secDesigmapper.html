@@ -1,0 +1,158 @@
+{% extends "home.html" %} {% block userDesignation %}
+<form
+  action="{% url 'SDMSubmit' %}"
+  data-toggle="validator"
+  method="post"
+>
+  {% csrf_token %}
+<div class="content-page">
+  <div class="container-fluid add-form-list">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+            <div class="header-title" style="text-align: center">
+              <h4 class="card-title">
+                Section Designation Mapper
+              </h4>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Court/Section*</label>
+                  <div class="search_select_box">
+                    <select
+                      name="sectionid"
+                      id="sectionid"
+                      class="selectpicker form-control"
+                      data-style="py-0"
+                      data-live-search="true"
+                      onchange="getAllDesignation()"
+                      
+                    >
+                      <option selected="true" disabled="disabled">
+                        -- Select --
+                      </option>
+                      {%for pdlist in list_all_sc%}
+                      <!-- <option value="{{pdlist.product_cat_id.product_cat_id}}">{{pdlist.product_cat_id.product_cat_name}} :-: [ {{pdlist.product_cat_id.product_type}} ]</option>    -->
+                      <option value="{{pdlist.section_id}}">
+                        {{pdlist.section_name}}
+                      </option>
+                      {%endfor%}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-1">
+                <div class="form-group">
+                  <br />
+                  <label
+                    style="
+                      background-color: cadetblue;
+                      margin: 7px;
+                      padding: 7px 20px 7px 20px;
+                      border-radius: 10px;
+                      font-size: 22px;
+                    "
+                    onclick="showAllDesignation()"
+                    >Show</label
+                  ><br />
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Designation*</label>
+                  <div class="search_select_box">
+                    <select
+                      name="desig"
+                      id="desig"
+                      class="selectpicker form-control"
+                      data-style="py-0"
+                      data-live-search="true"                      
+                    >
+                      <option selected="true" disabled="disabled">
+                        -- Select --
+                      </option>
+                      {%for sdmlist in list_all_sdm%}
+                      <!-- <option value="{{pdlist.product_cat_id.product_cat_id}}">{{pdlist.product_cat_id.product_cat_name}} :-: [ {{pdlist.product_cat_id.product_type}} ]</option>    -->
+                      <option value="{{sdmlist.staff_id}}">
+                        {{sdmlist.staff_des_name}}
+                      </option>
+                      {%endfor%}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2" >  
+                          <div class="form-group">
+                              <label>IP Address*</label>
+                              <input type="text" name="ipaddress" id="ipaddress" class="form-control">
+                          </div>
+                      </div>
+              <div class="col-md-2">
+              <div class="form-group">
+                <br>
+                <button type="submit" class="btn btn-primary mt-2">Map</button>
+              </div>
+            </div>
+            </div>            
+            <div class="col-md-12 text-center">              
+                <table class="table" style="width:100%" id="datakeeper">  
+                  <thead>
+                    <tr class="ligth">
+                        <th scope="col">Serial No</th>
+                        <th scope="col">Section</th>
+                        <th scope="col">Designation</th>        
+                        <th scope="col">IP Address</th>        
+                    </tr>
+                  </thead>   
+                  <tbody>                    
+                  </tbody>             
+                </table>
+                <p>{{msg}}</p>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+ <script>  
+  function getAllDesignation(){
+    sectionid = $("#sectionid").val();
+    $.ajax({
+      type: "GET",
+      url: "/getAllDesignationOfSection",
+      data: {
+        sectionid: sectionid,
+      },
+      success: function (data) {   
+        $("#desig").html(data);        
+        $("#desig").selectpicker("refresh");
+      },      
+    });
+  }
+  function showAllDesignation(){
+    sectionid = $("#sectionid").val();
+    $.ajax({
+      type: "GET",
+      url: "/showAllDesignation",
+      data: {
+        sectionid: sectionid,
+        source:'SDM',
+      },
+      success: function (data) {      
+        $("#datakeeper").find("tr:gt(0)").remove();
+        $("#datakeeper tr:last").after(data);        
+        // $("#datakeeper").selectpicker("refresh");
+      },      
+    });
+  }
+ </script>
+ {% endblock %}
+</div>

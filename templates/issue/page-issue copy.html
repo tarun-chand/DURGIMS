@@ -1,0 +1,216 @@
+{% extends "home.html" %}
+{% block issueDetails %} 
+    <div class="content-page">
+        <div class="container-fluid add-form-list">
+           <div class="row">
+               <div class="col-sm-12">
+                   <div class="card">
+                       <div class="card-header d-flex justify-content-between" >
+                           <div class="header-title" style="text-align: center;">
+                               <h4 class="card-title">New Issue</h4>
+                           </div>
+                       </div>
+                       <div class="card-body">
+                           <form action="page-list-returns.html" data-toggle="validator">
+                               <div class="row">                                  
+                                <input type="hidden" value="ISSUED">   
+                                    <div class="col-md-12">  
+                                        <div class="form-group">
+                                            <div class="heading-keeper">
+                                                <span>Product Details</span>
+                                            </div> 
+                                        </div>
+                                    </div>                                      
+                                    
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Product Category -- [ Type ] *</label>
+                                            <div class="search_select_box">
+                                                <select name="productcat" id="productcat" class="selectpicker form-control" data-style="py-0" data-live-search="true" onchange="getProductList()">
+                                                    <option selected="true" disabled="disabled">-- Category :-: [ Type ]--</option>   
+                                                    {%for pdlist in list_of_prod%}
+                                                        <option value="{{pdlist.product_cat_id.product_cat_id}}">{{pdlist.product_cat_id.product_cat_name}} :-: [ {{pdlist.product_cat_id.product_type}} ]</option>   
+                                                    {%endfor%}                       
+                                                </select>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                         
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Product Company -- [ Model ] *</label>
+                                            <div class="search_select_box">
+                                                <select name="product" id="productdet" class="selectpicker form-control" data-style="py-0" data-live-search="true" onchange="getProductDetail()">
+                                                    <option selected="true" disabled="disabled">--- Select ---</option>                          
+                                                </select>
+                                            </div>
+                                        </div> 
+                                    </div>                                          
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Serial No *</label>
+                                            <div class="search_select_box">
+                                                <select name="serial" id="serial" class="selectpicker form-control" data-style="py-0" data-live-search="true" >
+                                                    <option selected="true" disabled="disabled">--- Select ---</option>                          
+                                                </select>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Quantity</label>
+                                            <input type="text" name="quantity" name="quantity" class="form-control" placeholder="No of Item"  >
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label> Issued To *</label>
+                                            <select name="issueto" class="selectpicker form-control" data-style="py-0">
+                                                <option selected="true" disabled="disabled">--- Select ---</option>
+                                                <option>Staff</option>
+                                                <option>Judge</option>
+                                            </select>
+                                        </div> 
+                                    </div>     
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Receiver Name*</label>
+                                            <div class="search_select_box">
+                                                <select name="producttype" class="selectpicker form-control" data-style="py-0" data-live-search="true">
+                                                    <option selected="true" disabled="disabled">--- Select ---</option>                          
+                                                </select>
+                                            </div>
+                                        </div> 
+                                    </div>   
+                                    <div class="col-md-3">                      
+                                        <div class="form-group">
+                                                <label>Issue Date *</label>
+                                                <input type="text" class="form-control" placeholder="Date">
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                                <label>Issue Remark *</label>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        </div>
+                                    </div>    
+                                    <div class="col-md-12">  
+                                        <div class="form-group">
+                                            <div class="heading-keeper">
+                                                <span>User Details</span>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label> Issued To *</label>
+                                            <select name="issueto" class="selectpicker form-control" data-style="py-0">
+                                                <option selected="true" disabled="disabled">--- Select ---</option>
+                                                <option>Staff</option>
+                                                <option>Judge</option>
+                                            </select>
+                                        </div> 
+                                    </div>     
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Receiver Name*</label>
+                                            <div class="search_select_box">
+                                                <select name="producttype" class="selectpicker form-control" data-style="py-0" data-live-search="true">
+                                                    <option selected="true" disabled="disabled">--- Select ---</option>                          
+                                                </select>
+                                            </div>
+                                        </div> 
+                                    </div>                        
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Location Type</label>
+                                            <input type="text" class="form-control" placeholder="Court/Section" readonly >
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div> 
+                                       <div class="col-md-6">
+                                           <div class="form-group">
+                                               <label>Section</label>
+                                               <input type="text" class="form-control" placeholder="Enter Customer Name" readonly>
+                                               <div class="help-block with-errors"></div>
+                                           </div>
+                                       </div>   
+                                       <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Building</label>
+                                            <input type="text" class="form-control" placeholder="Enter Customer Name" readonly>
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Floor</label>
+                                            <input type="text" class="form-control" placeholder="Enter Customer Name" readonly>
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Room No</label>
+                                            <input type="text" class="form-control" placeholder="Enter Customer Name" readonly>
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>     
+                                    <div class="col-md-6">                      
+                                        <div class="form-group">
+                                                <label>Issue Date *</label>
+                                                <input type="text" class="form-control" placeholder="Date">
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                                <label>Issue Remark *</label>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                               </div>                            
+                               <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                               <button type="reset" class="btn btn-danger">Reset</button>
+                           </form>
+                       </div>
+                   </div>
+               </div>
+           </div> <!-- ROW END-->
+           <!-- Page end  -->
+       </div>
+    </div>
+    <script>
+        function getProductList(){
+            productcat=$('#productcat').val();
+
+            $.ajax({
+                type:"GET",
+                url: "/issueProductFilter",
+                data:{
+                    productcat: productcat
+                },
+                success: function(data) 
+                {
+                $('#productdet').html(data);
+                $('#productdet').selectpicker('refresh');
+              }
+            })
+        }
+        function getProductDetail(){
+            productdet=$('#productdet').val();
+            $.ajax({
+                type:"GET",
+                url: "/issueProductDetailsFilter",
+                data:{
+                    productdet: productdet
+                },
+                success: function(data) 
+                {
+                    alert(data);
+                }
+            })
+        }
+    </script>
+
+
+    {% endblock %}

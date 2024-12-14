@@ -1,0 +1,296 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Inventory | Home</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+    <link rel="stylesheet" href="{% static 'css/backend-plugin.min.css'%}" />
+    <link rel="stylesheet" href="{% static 'css/backend.css'%}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/@fortawesome/fontawesome-free/css/all.min.css'%}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css'%}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/remixicon/fonts/remixicon.css'%}"
+    />
+    <link rel="stylesheet" href="{% static 'css/style.css'%}" />
+
+      <!-- DataTables Buttons CSS for PDF styling -->
+    <link rel="stylesheet" href="{% static 'css/dataTables.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/buttons.dataTables.css'%}">
+    <style>
+      .dt-search {
+        float: right;
+      }
+    </style>
+  </head>
+<div class="content-page ml-0 pt-4">
+  <div class="container-fluid add-form-list pb-2">
+    <div class="row pb-4">
+      <div class="col-lg-12 text-center">
+        <h1>DCD_IMS</h1>
+      </div>
+    </div>
+  <div class="container-fluid add-form-list pb-2">
+    <div class="row">
+      <div class="col-lg-4"></div>
+      <div class="col-lg-4 text-center">
+        <label>User Name :</label>
+        <div class="search_select_box">
+          <select
+            name="sectionid"
+            id="sectionid"
+            class="selectpicker form-control"
+            data-style="py-0"
+            data-live-search="true"
+            onchange="getAllCourtData()"
+          >
+            <option selected="true" disabled="disabled">-- Select --</option>
+            {%for usrlist in list_all_usr%}
+            <option value="{{usrlist.usr_id}}">
+              {{usrlist.usr_name}}
+            </option>
+            {%endfor%}
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>  
+  <div class="container-fluid add-form-list" id="courtdata">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-block card-stretch card-height">
+          <div class="card-header d-flex align-items-center justify-content-between pt-2 pb-2" style="background-color: antiquewhite">
+            <div class="header-title mx-auto">
+              <h4 class="card-title" id="cshead">COMPUTER ARTICLES DETAILS </h4>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top: 10px">            
+            <div class="col-md-12 text-center" id="dashboarddatakeeper">
+              <!-- This will Hold All the datatable with data return from python -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<footer class="iq-footer ml-0" style="width: 100%;">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <span class="mr-1"
+              ><script>
+                document.write(new Date().getFullYear());
+              </script>
+              ©</span
+            >
+            <a href="#" class="">The Server Room</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+ 
+<script src="{%static 'js/backend-bundle.min.js'%}"></script>    
+<script src="{%static 'js/dataTables.js'%}"></script>
+<script src="{%static 'js/dataTables.buttons.js'%}"></script>
+<script src="{%static 'js/buttons.dataTables.js'%}"></script>
+<script src="{%static 'js/jszip.min.js'%}"></script>
+<script src="{%static 'js/pdfmake.min.js'%}"></script>
+<script src="{%static 'js/vfs_fonts.js'%}"></script>
+<script src="{%static 'js/buttons.html5.min.js'%}"></script>
+<!-- <script src="{%static 'js/jquery.dataTables.min.js'%}"></script>     -->
+<script src="{%static 'js/app.js'%}"></script>
+<!-- <script src="{%static 'js/Chart.js'%}"></script> -->
+<!-- <script src="{%static 'js/script.js'%}"></script> -->
+
+<script>
+function getAllCourtData() {  
+    sectionid = $("#sectionid").val();
+    let mybutton = [];
+    
+
+    $.ajax({
+      type: "GET",
+      url: "/getCourtSectionUserWiseData",
+      data: {
+        sectionid: sectionid, 
+        source:'User',           
+      },
+      success: function (data) {
+        flag = data.verified
+        if(data.dlen > 0 )
+          $("#dashboarddatakeeper").html(data.all_table);                     
+        else
+          $("#dashboarddatakeeper").html(data.emsg);                      
+        pdffile = $("#pdffilename").val();     
+        mybutton.push( 
+          {
+            extend: "pdfHtml5",
+            pageSize: 'A4',
+            orientation: "landscape",
+            title:
+                "Court/Section Name :- " +
+                $("#cosecname").val(),        
+              customize: function (doc) {
+                // Center the title
+                doc.content[0].style = { alignment: 'center', fontSize: 18,bold: true };                  
+                // Add additional text below the title                               
+                doc.content.splice(1, 0, {
+                  columns: [                                                
+                    {
+                      text: 'Assigned To : ' + $("#staff_des_name").val(),
+                      alignment: 'left', // Center-align the "Assigned To"
+                      fontSize: 16,
+                      width: '33%' // Allocate one-third of the space for this text
+                    },
+                    {
+                      text: 'Current Staff : ' + $("#username").val(),
+                      alignment: 'center', // Center-align the "Current Staff"
+                      fontSize: 16,
+                      width: '33%' // Allocate one-third of the space for this text
+                    },
+                    {
+                      text: 'Date Of Posting : ' + $("#itdate").val(),
+                      alignment: 'right', // Center-align the "Date Of Joining"
+                      fontSize: 16,
+                      width: '33%' // Allocate more space for this text
+                    }
+                  ],
+                  margin: [0, 2, 0, 10] // Add space after the row
+                });
+                
+                
+              
+                // Make the table fully stretched
+                const tableIndex = doc.content.findIndex(item => item.table); // Find the table in the content
+                if (tableIndex !== -1) {
+                  const pageWidth = 760;  // The width of the page (in points)
+                  console.log('pageWidth----' + pageWidth);
+                  
+                  // Adjust the table width to fit the page width, minus margins (default margin is 40)
+                  const tableWidth = pageWidth - 40;  // 40 is the combined left and right margin
+                  console.log('tableWidth----' + tableWidth);
+                  
+                  // Define custom column widths (in percentage or points) - Example for 6 columns
+                  const columnWidths = [5, 13, 27, 17, 13, 25]; // Define widths for each column (in percentage)
+                  const totalWidthPercentage = columnWidths.reduce((sum, width) => sum + width, 0);
+                  
+                  // Ensure the sum of column widths is equal to 100% or adjust proportionally
+                  if (totalWidthPercentage !== 100) {
+                    const scaleFactor = 100 / totalWidthPercentage;
+                    columnWidths.forEach((width, index) => {
+                      columnWidths[index] = (width * scaleFactor); // Adjust each column's width to ensure the total adds up to 100%
+                    });
+                  }
+                  
+                  console.log('Adjusted column widths (in percentage): ' + columnWidths);
+                  
+                  // Convert column widths from percentage to points based on the available table width
+                  const columnWidthsInPoints = columnWidths.map(width => (tableWidth * width) / 100);
+                  console.log('Column widths in points: ' + columnWidthsInPoints);
+                  
+                  // Get the table from the content
+                  const table = doc.content[tableIndex].table; 
+                  
+                  // Set the column widths for the table
+                  table.widths = columnWidthsInPoints; // Assign the calculated widths to the table columns
+                  
+                  // Now, you can proceed with any additional customization to your table (alignment, row styles, etc.)
+                  
+                  // Apply cell padding, alignment, and row background colors
+                  table.body.forEach((row, rowIndex) => {
+                    row.forEach((cell, cellIndex) => {
+                      if (typeof cell === 'object') {
+                        cell.margin = [1,1,1,1]; // Padding: [left, top, right, bottom]
+                        cell.alignment = 'center'; // Center-align text
+                        if (rowIndex % 2 === 1) cell.fillColor = '#f2f2f2'; // Apply background color to odd rows
+                      } else {
+                        // Convert plain strings to objects to apply styles
+                        row[cellIndex] = {
+                          text: cell,
+                          margin: [1,1,1,1], // Padding
+                          alignment: 'center', // Alignment
+                          fillColor: rowIndex % 2 === 1 ? '#f2f2f2' : null // Apply background color to odd rows
+                        };
+                      }
+                    });
+                  });
+                }
+              
+                // Add text below the table (left and right aligned)
+                doc.content.push({
+                  columns: [
+                    {
+                      text: 'Verified By', // Left-aligned text
+                      alignment: 'left',
+                      fontSize: 14,
+                      bold: true,
+                      margin: [0, 60, 0, 0] // Add spacing above the text
+                    },
+                    {
+                      text: $("#username").val(), // Right-aligned text
+                      alignment: 'right',
+                      fontSize: 14,
+                      bold: true,
+                      margin: [0, 60, 0, 0] // Add spacing above the text
+                    }
+                  ]
+                });
+              }
+          },
+          {
+            extend: "excelHtml5",  
+            title:
+            "DCD_IMS" + "\n" +
+            "COMPUTER ARTICLES DETAILS" + "\n\n" +                  
+            $("#udata").val(),              
+          }
+        );
+        if (flag == 'YES'){
+          mybutton.push(          
+            {
+              text: 'Pawati', // Custom button text
+              className: 'btn btn-primary', // Optional: Add a custom CSS class
+              action: function (e, dt, node, config) {                                 
+                const link = document.createElement('a');                                
+                link.href = pdffile;       
+                link.target = '_blank'; // Open link in a new tab          
+                link.click();               
+              }
+            }
+            );    
+          }              
+      },
+      complete: function () {        
+        console.log(mybutton);
+        $("#userdatakeeper").DataTable({
+          destroy: true,
+          buttons: mybutton,
+          dom: "Bfrtip",
+          bPaginate: false,
+          ScrollCollapse: true,
+                
+        });
+      },
+    });
+  }
+</script>
+

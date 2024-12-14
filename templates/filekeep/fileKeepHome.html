@@ -1,0 +1,261 @@
+{% extends "home.html" %} {% block userDetails %}
+<div class="content-page">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-center">
+            <div class="header-title">
+              <h4 class="card-title" style="">DCD File Management System</h4>
+            </div>
+          </div>
+          <div class="card-body">
+            <ul class="nav nav-tabs" id="myTab-1" role="tablist">
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  id="home-tab"
+                  data-toggle="tab"
+                  href="#home"
+                  role="tab"
+                  aria-controls="home"
+                  aria-selected="true"
+                  >Add New Document</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  id="profile-tab"
+                  data-toggle="tab"
+                  href="#profile"
+                  role="tab"
+                  aria-controls="profile"
+                  aria-selected="false"
+                  >Add New Primary File</a
+                >
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent-2">
+              <div
+                class="tab-pane fade show active"
+                id="home"
+                role="tabpanel"
+                aria-labelledby="home-tab"
+              >
+                <div class="col-sm-12">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                      <div class="header-title" style="text-align: center">
+                        <h4 class="card-title">Add New Document</h4>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <form
+                        action="{% url 'documentsDetailsSubmit' %}"
+                        data-toggle="validator"
+                        method="post"
+                      >
+                        <div class="row">
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label>Building Name *</label>
+                              <select
+                                name="est_id"
+                                class="selectpicker form-control"
+                                data-style="py-0"
+                              >
+                                <option selected="true" disabled="disabled">
+                                  --- Select ---
+                                </option>
+                                {%for bl in list_all_bul%}
+                                <option value="{{bl.building_id}}">
+                                  {{bl.building_name}}
+                                </option>
+                                {%endfor%}
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label>Primary File Name *</label>
+                              <select
+                                name="est_id"
+                                class="selectpicker form-control"
+                                data-style="py-0"
+                              >
+                                <option selected="true" disabled="disabled">
+                                  --- Select ---
+                                </option>
+                                {%for pfn in list_all_pf%}
+                                <option value="{{pfn.pfile_id}}">
+                                  {{pfn.primary_file_name}}
+                                </option>
+                                {%endfor%}
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label>Almira Name *</label>
+                              <input
+                                type="text"
+                                name="pfname"
+                                class="form-control"
+                                placeholder="Almira Name"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Document Name { Eng }*</label>
+                              <input
+                                type="text"
+                                name="pfname"
+                                class="form-control"
+                                placeholder="Document Name in English"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Document Name { Hi }*</label>
+                              <input
+                                type="text"
+                                name="pfname"
+                                class="form-control"
+                                placeholder="Document Name in Hindi"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-12 text-center">
+                          <div class="form-group">
+                            <button type="submit" class="btn btn-primary mr-2">
+                              Submit
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="profile"
+                role="tabpanel"
+                aria-labelledby="profile-tab"
+              >
+            <div class="row">
+              <div class="col-md-6">                
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                      <div class="header-title" style="text-align: center">
+                        <h4 class="card-title">Add New Primary File</h4>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <form
+                        action="{% url 'primaryFileDetailsSubmit' %}"
+                        data-toggle="validator"
+                        method="post"
+                      >
+                      {% csrf_token %}
+                        <div class="form-group">
+                          <label>Primary File Name *</label>
+                          <input
+                            type="text"
+                            name="pfname"
+                            class="form-control"
+                            placeholder="Primary File Name"
+                          />
+                        </div>
+                        <div class="col-md-12 text-center">
+                          <div class="form-group">
+                            <button type="submit" class="btn btn-primary mr-2">
+                              Submit
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">                
+                  <div class="card">
+                    <div class="card-body">
+                    <div class="col-lg-12">
+                <div class="table-responsive rounded mb-3">
+                <table class="data-table table mb-0 tbl-server-info" id="primaryFileTab">
+                    <thead class="bg-white text-uppercase">
+                        <tr class="ligth ligth-data">                            
+                            <th>Primary File No.</th>
+                            <th>Primary File Name</th>                            
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="ligth-body">
+                      {% for pf in list_all_pf%} 
+                        <tr>                           
+                            <td>{{pf.pfile_id}}</td>
+                            <td>{{pf.primary_file_name}}</td>                                                         
+                            <td>
+                                <div class="d-flex align-items-center list-action">
+                                    <a class="badge badge-info mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="View"
+                                        href="#"><i class="ri-eye-line mr-0"></i></a>                                   
+                                </div>
+                            </td>
+                        </tr>     
+                      {%endfor%}                
+                    </tbody>
+                </table>
+                </div>
+            </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function getUserDesignation() {
+      usrtype = $("#usrtype").val();
+      $.ajax({
+        type: "GET",
+        url: "/userDesignationFilter",
+        data: {
+          usrtype: usrtype,
+        },
+        success: function (data) {
+          $("#usrdesig").html(data);
+          $("#usrdesig").selectpicker("refresh");
+        },
+      });
+    }
+
+    $('#primaryFileTab').dataTable( {
+      destroy: true,
+      scrollResize: true,
+      scrollY: 750,
+      scrollCollapse: true,
+      paging: false
+      
+    } );  
+
+
+
+
+  </script>
+  {% endblock %}
+</div>

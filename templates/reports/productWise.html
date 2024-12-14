@@ -1,0 +1,67 @@
+{% extends "home.html" %} {% block healthDetails %}
+<div class="content-page">
+  <div class="container-fluid add-form-list">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+            <div class="header-title" style="text-align: center">
+              <h4 class="card-title">Section Wise Details</h4>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <div
+                  class="table-responsive rounded mb-3"
+                  style="overflow-y: scroll; height: 490px"
+                >
+                  <table class="data-table table mb-0 tbl-server-info">
+                    <thead class="bg-white text-uppercase">
+                      <tr class="ligth ligth-data">
+                        <th>Product Category</th>
+                        <th>Total Inhand</th>
+                        <th>Total Issued</th>
+                        <th>Total Products</th>
+                      </tr>
+                    </thead>
+                    <tbody class="ligth-body" >
+                    {%for pdlist in pro_cat_count%}
+                      <tr>
+                        <td>{{pdlist.product_cat_name}}</td>
+                        <td>
+                          {%if pdlist.no_of_item_inhand == 0 %}
+                              {{pdlist.no_of_item_inhand}}         
+                          {%else%}
+                              <a href="/getProductModelsInhand/{{pdlist.product_cat_id}}/0" >
+                                  <span style="color:  #C70039;font-weight: bold" >{{pdlist.no_of_item_inhand}}</span>
+                              
+                          {%endif%} 
+                        </td>
+                        <td>
+                          {%if pdlist.no_of_item_issue == 0 %}
+                              {{pdlist.no_of_item_issue}}           
+                          {%else%}
+                              <a href="/getProductModelsInhand/{{pdlist.product_cat_id}}/0" >
+                                  <span style="color:  #C70039;font-weight: bold" >{{pdlist.no_of_item_issue}}</span>
+                              
+                          {%endif%}   
+                        </td>                                                                                         
+                        <td>{{pdlist.no_of_item_inhand}} + {{pdlist.no_of_item_issue}} </td>
+                      </tr>
+                    {%endfor%}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ROW END-->
+    <!-- Page end  -->
+  </div>
+</div>
+
+{% endblock %}

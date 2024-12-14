@@ -1,0 +1,109 @@
+{% extends "home.html" %} {% block userDetails %}
+<div class="content-page">
+    <div class="container-fluid add-form-list">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <div class="header-title" style="text-align: center">
+                            <h4 class="card-title">Upload User Pawati</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">  
+                        <form action="{% url 'uploadPawatiSubmit' %}" method="post" enctype = "multipart/form-data" >
+                            {% csrf_token %}                              
+                            <div class="row">   
+                                    <div class="col-md-12">
+                                        {%for msg in messages%} {% if msg.tags == "info" %}
+                                        <div class="alert alert-warning" role="alert">
+                                        <div class="iq-alert-text">
+                                            <b>{{ msg }}</b>
+                                        </div>
+                                        </div>
+                                        {% elif msg.tags == "success" %}
+                                        <div class="alert alert-success" role="alert">
+                                        <div class="iq-alert-text">
+                                            <b>{{ msg }}</b>
+                                        </div>
+                                        </div>
+                                        {%endif%} {%endfor%}
+                                    </div>                                                                           
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                        <label>User <--> Designation</label>
+                                        <div class="search_select_box">
+                                            <select
+                                            name="desigdetail"
+                                            id="desigdetail"
+                                            class="selectpicker form-control"
+                                            data-style="py-0"
+                                            data-live-search="true"                                                                                
+                                            >                                                                           
+                                            <option selected="true" disabled="disabled">-- Select --</option>
+                                            {%for ulist in usr_list %}
+                                                <option value="{{ulist.0}}">{{ulist.1}} - {{ulist.2}}</option>
+                                            {%endfor%}
+                                            </select>                                        
+                                        </div>
+                                        </div>
+                                    </div>                                                                        
+                                    <div class="col-md-1">
+                                        <label> <br></label>
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-primary mr-2" onclick="getUserDesList()"> Submit </button>
+                                        </div>
+                                    </div>  
+                                    <div class="col-md-5" id='uploadPawati' style='display:none;'>
+                                        <div class="form-group">
+                                        <label>Bill No./Memo No. *</label>
+                                        <input type="file" class="form-control image-file" name="uploadpawati" id="uploadpawati" accept=".pdf" />
+                                        </div>                                    
+                                    </div>  
+                                    <div class="col-md-1" id='uploadok' style='display:none;'>
+                                        <label> <br></label>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-success mr-2" > Upload </button>
+                                        </div>
+                                    </div>  
+                                                            
+                                    <div class="col-md-12 text-center" id="alluserdata">
+                                            <!-- This will Hold All the data return from python -->
+                                    </div>                                                               
+                            </div>   
+                        </form>                     
+                    </div>
+                </div>
+            </div>                        
+        </div> <!-- ROW END-->
+    </div>
+  <script>   
+    function getUserDesList()  {
+        
+        uname = $("#desigdetail").val();                
+        $.ajax({
+        type: "GET",
+        url: "/getAllUserDesList",
+        data: {
+            uname: uname,
+        },
+        success: function (data) {            
+            //$('#alluserdata').find("tr:gt(0)").remove();
+            //$('#alluserdata tr:last').after(data); 
+            if (data) {
+                $('#alluserdata').empty();
+                $('#alluserdata').append(data); // Append rows to the tbody
+                $('#uploadPawati').show();    
+                $('#uploadok').show();    
+                            
+            } else {
+                alert("No data returned from the server.");
+                $('#uploadPawati').hide();                
+                $('#uploadok').hide();                
+            }
+            
+        },
+        });
+    }
+  </script>
+  {% endblock %}
+</div>

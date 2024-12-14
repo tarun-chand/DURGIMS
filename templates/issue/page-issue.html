@@ -1,0 +1,434 @@
+{% extends "home.html" %} {% block issueDetails %}
+
+<form
+  action="{% url 'IssueDetailsSubmit' %}"
+  data-toggle="validator"
+  method="post"
+>
+  {% csrf_token %}
+  <div class="content-page">
+    <div class="container-fluid add-form-list">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between">
+              <div class="header-title" style="text-align: center">
+                <h4 class="card-title">New Issue</h4>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                  {%for msg in messages%} {% if msg.tags == "info" %}
+                  <div class="alert alert-warning" role="alert">
+                    <div class="iq-alert-text">
+                      <b>{{ msg }}</b>
+                    </div>
+                  </div>
+                  {% elif msg.tags == "success" %}
+                  <div class="alert alert-success" role="alert">
+                    <div class="iq-alert-text">
+                      <b>{{ msg }}</b>
+                    </div>
+                  </div>
+                  {%endif%} {%endfor%}
+                </div>
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label>Issue Date *</label>
+                    <input
+                      type="date"
+                      name="issueDate"
+                      id="iss_date"
+                      class="form-control"
+                      placeholder="Date"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label> Issued To *</label>
+                    <select
+                      name="issueto"
+                      id="issueto"
+                      class="selectpicker form-control"
+                      data-style="py-0"
+                      onchange="getSectionDetails()"
+                      required
+                    >
+                      <option selected="true" disabled="disabled">
+                        --- Select ---
+                      </option>
+                      <option value="Section">Section</option>
+                      <option value="Court">Court</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Section *</label>
+                    <div class="search_select_box">
+                      <select
+                        name="locationdetail"
+                        id="locationdetail"
+                        class="selectpicker form-control"
+                        data-style="py-0"
+                        data-live-search="true"
+                        onchange="getSectionDesignation()"
+                        required
+                      >
+                        <option selected="true" disabled="disabled">
+                          --- Select ---
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Staff Designation *</label>
+                    <div class="search_select_box">
+                      <select
+                        name="desigdetail"
+                        id="desigdetail"
+                        class="selectpicker form-control"
+                        data-style="py-0"
+                        data-live-search="true"
+                        required
+                      >
+                        <option selected="true" disabled="disabled">
+                          --- Select ---
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label>Product Category -- [ Type ] *</label>
+                    <div class="search_select_box">
+                      <select
+                        name="productcat"
+                        id="productcat"
+                        class="selectpicker form-control"
+                        data-style="py-0"
+                        data-live-search="true"
+                        onchange="getProductModelList()"
+                      >
+                        <option selected="true" disabled="disabled">
+                          -- Category :-: [ Type ]--
+                        </option>
+                        {%for pdlist in list_of_cat%}
+                        <!-- <option value="{{pdlist.product_cat_id.product_cat_id}}">{{pdlist.product_cat_id.product_cat_name}} :-: [ {{pdlist.product_cat_id.product_type}} ]</option>    -->
+                        <option value="{{pdlist.product_cat_id}}">
+                          {{pdlist.product_cat_name}} :-: [
+                          {{pdlist.product_type}} ]
+                        </option>
+                        {%endfor%}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4" style="max-width: 27%">
+                  <div class="form-group">
+                    <label
+                      >Product Company Name -> Model Name -> Serial No *</label
+                    >
+                    <div class="search_select_box">
+                      <select
+                        name="productdet"
+                        id="productdet"
+                        class="selectpicker form-control"
+                        data-style="py-0"
+                        data-live-search="true"
+                        onchange="getOtherProductDetails()"
+                      >
+                        <option selected="true" disabled="disabled">
+                          -- Company Name -> Model Name -> Serial No --
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-2" style="max-width: 10%">
+                  <div class="form-group">
+                    <label>Issue Quantity *</label>
+                    <input
+                      type="text"
+                      name="quantity"
+                      id="quantity"
+                      class="form-control"
+                      placeholder="No of Item"
+                      onblur="checkQuantity(this)"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-2" style="max-width: 11%">
+                  <div class="form-group">
+                    <label>Available Quantity</label>
+                    <input
+                      type="text"
+                      name="Aquantity"
+                      id="Aquantity"
+                      class="form-control"
+                      placeholder="No of Item"
+                      readonly
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-2" style="max-width: 13.5%">
+                  <div class="form-group">
+                    <label>Product Remark</label>
+                    <textarea
+                      class="form-control"
+                      id="premark"
+                      rows="1"
+                      readonly
+                    ></textarea>
+                  </div>
+                </div>
+                <div class="col-sm-2" style="max-width: 13.5%">
+                  <div class="form-group">
+                    <label>Issue Remark *</label>
+                    <textarea
+                      class="form-control"
+                      name="issueRemark"
+                      id="issueRemark"
+                      rows="1"
+                    ></textarea>
+                  </div>
+                </div>
+                <div class="col-sm-1">
+                  <div class="form-group">
+                    <br />
+                    <label
+                      style="
+                        background-color: cadetblue;
+                        margin: 7px;
+                        padding: 7px 20px 7px 20px;
+                        border-radius: 10px;
+                        font-size: 22px;
+                      "
+                      onclick="addProduct()"
+                      >Add</label
+                    ><br />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <input type="hidden" name="dateIssue" id="dateIssue" />
+              <input type="hidden" name="sdmid" id="sdmid" />
+              <div class="row">
+                <div class="col-md-12">
+                  <table id="productData" class="table table-striped">
+                    <thead>
+                      <tr class="ligth">
+                        <th>S.No</th>
+                        <th>Product Name & Model</th>
+                        <th>Serial No</th>
+                        <th>Quantity</th>
+                        <th>Remarks</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+                <div id="rec12" class="col-sm-3" style="display: none">
+                  <div class="form-group">
+                    <label>Is the Person Available For Receiving......?*</label>
+                    <div class="form-group">
+                      <div class="form-group">
+                        <select
+                          name="receiving"
+                          id="receiving"
+                          class="selectpicker form-control"
+                          data-style="py-0"
+                          onchange="changeButton()"
+                          required
+                        >
+                          <option selected="true" disabled="disabled" value="">
+                            --- Select ---
+                          </option>
+                          <option value="Yes">YES</option>
+                          <option value="No">NO</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="form-group text-center">
+                    <button
+                      type="submit"
+                      id="subButton"
+                      class="mt-2 btn btn-success"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ROW END-->
+      <!-- Page end  -->
+    </div>
+  </div>
+</form>
+<script>
+  document.getElementById("iss_date").valueAsDate = new Date();
+  function checkQuantity(a) {
+    cqun = parseInt(a.value);
+    aqun = parseInt($("#Aquantity").val());
+
+    if (cqun > aqun) {
+      alert("Entered Quantity is Greater than Available Quantity...");
+      return false;
+    }
+  }
+  function changeButton() {
+    let r1 = $("#receiving option:selected").val();
+    // let r1 = $("input[name='receiving']:checked").val();
+    if (r1 === "Yes") $("#subButton").html("Submit and Print");
+    else $("#subButton").html("Submit");
+  }
+  function getProductModelList() {
+    productcat = $("#productcat").val();
+    // alert(productcat);
+    $.ajax({
+      type: "GET",
+      url: "/issueProductModelFilter",
+      data: {
+        productcat: productcat,
+      },
+      success: function (data) {
+        $("#productdet").html(data);
+        $("#productdet").selectpicker("refresh");
+      },
+    });
+  }
+  function getOtherProductDetails() {
+    productdet = $("#productdet").val();
+    $.ajax({
+      type: "GET",
+      url: "/issueOtherProductDetailsFilter",
+      data: {
+        productdet: productdet,
+      },
+      success: function (data) {
+        var result = eval(data);
+        $("#Aquantity").val(result[0].current_quantity);
+        $("#premark").val(result[0].remarks);
+      },
+    });
+  }
+
+  function getSectionDetails() {
+    issueto = $("#issueto").val();
+
+    $.ajax({
+      type: "GET",
+      url: "/issueSectionDetailsFilter",
+      data: {
+        issueto: issueto,
+      },
+      success: function (data) {
+        $("#locationdetail").html(data);
+        $("#locationdetail").selectpicker("refresh");
+      },
+    });
+  }
+  function getSectionDesignation() {
+    locationdetail = $("#locationdetail").val();
+    $.ajax({
+      type: "GET",
+      url: "/sectionDesigDetailsFilter",
+      data: {
+        locationdetail: locationdetail,
+      },
+      success: function (data) {
+        $("#desigdetail").html(data);
+        $("#desigdetail").selectpicker("refresh");
+      },
+    });
+  }
+  let s = 0;
+  function addProduct() {
+    idate = $("#iss_date").val();
+    sdmid = $("#desigdetail").val();
+    posted = $("#locationdetail").val();
+
+    productcat = $("#productcat").val();
+    productdet = $("#productdet").val();
+    quantity = $("#quantity").val();
+
+    if (
+      idate == null ||
+      sdmid == null ||
+      posted == null ||
+      productcat == null ||
+      productdet == null ||
+      quantity == null
+    ) {
+      alert("Please Fill all Required Elements ...");
+      return false;
+    } else {
+      $("#dateIssue").val(idate);
+      $("#sdmid").val(sdmid);
+      $("#postedAt").val(posted);
+
+      procat = $("#productcat option:selected").text();
+      proCatdata = procat.split(":-:");
+      // alert(proCatdata);
+
+      productdet = $("#productdet option:selected").text();
+      prodata = productdet.split("->");
+
+      quantity = $("#quantity").val();
+      issueRemark = $("#issueRemark").val();
+      s = s + 1;
+      sno = "<td>" + s + ".</td>";
+      pdt =
+        "<td><input name='proId' type='hidden' value='" +
+        $("#productdet").val() +
+        "'>" +
+        proCatdata[0] +
+        ":- " +
+        prodata[0] +
+        "(" +
+        prodata[1] +
+        ")</td>";
+      ser = "<td>" + prodata[2] + "</td>";
+      qun =
+        "<td><input name='proQun' type='hidden' value='" +
+        quantity +
+        "'>" +
+        quantity +
+        "</td>";
+      rem =
+        "<td><input name='proRem' type='hidden' value='" +
+        issueRemark +
+        "'>" +
+        issueRemark +
+        "</td>";
+      del =
+        "<td><input class='mt-2 btn btn-danger' type='button' onClick=$(this).closest('tr').remove() value='Delete'></td>";
+      newRow = "<tr>" + sno + pdt + ser + qun + rem + del + "</tr>";
+      $("#productData tr:last").after(newRow);
+    }
+    $("#quantity").val("");
+    var rowCount = $("#productData tr").length;
+    if (rowCount >= 2) {
+      document.getElementById("rec12").style.display = "block";
+    }
+  }
+</script>
+{% endblock %}

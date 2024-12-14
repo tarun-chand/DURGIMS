@@ -1,0 +1,131 @@
+{% extends "home.html" %}
+{% block healthDetails %} 
+<div class="content-page">
+    <div class="container-fluid add-form-list">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between">
+              <div class="header-title" style="text-align: center">
+                <h4 class="card-title">Reports By</h4>
+              </div>
+            </div>
+            <div class="card-body">              
+                <div class="row">                      
+                  <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Product Name/Model</label>
+                        <div class="search_select_box">
+                            <select name="productName" id="productName" class="selectpicker form-control" data-style="py-0" data-live-search="true" onchange="getReportBy(this.value,'P')">
+                              <option selected="true" disabled="disabled">--- Select ---</option>     
+                              {%for pdlist in list_of_prod%}                              
+                              <option value="{{pdlist.product_id}}">
+                                {{pdlist.product_mod.product_com.product_cat.product_cat_name}} :-: 
+                                {{pdlist.product_mod.product_com.product_com_name}} :-: 
+                                {{pdlist.product_mod.product_mod_name}} :-: {{pdlist.product_serialno}}
+                              </option>
+                              {%endfor%}                                                       
+                            </select>
+                        </div>
+                    </div> 
+                  </div> 
+                  
+                  <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Section Name</label>
+                        <div class="search_select_box">
+                            <select name="sectionid" id="sectionid" class="selectpicker form-control" data-style="py-0" data-live-search="true" onchange="getReportBy(this.value,'S')" >
+                              <option selected="true" disabled="disabled">--- Select ---</option>   
+                              {%for sclist in list_of_sec%}                              
+                              <option value="{{sclist.section_id}}">
+                                {{sclist.section_name}}
+                              </option>
+                              {%endfor%}                                                                                                                                                          
+                            </select>
+                        </div>
+                    </div> 
+                  </div>
+
+                  <div class="col-md-2">
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <div class="search_select_box">
+                            <select name="usrname" id="usrname" class="selectpicker form-control" data-style="py-0" data-live-search="true" onchange="getReportBy(this.value,'U')" >
+                              <option selected="true" disabled="disabled">--- Select ---</option> 
+                              {%for urslist in list_of_usr%}                              
+                              <option value="{{urslist.usr_id}}">
+                                {{urslist.usr_name}}
+                              </option>
+                              {%endfor%}                                                                                                                                                            
+                            </select>
+                        </div>
+                    </div> 
+                  </div>                     
+                    
+                  <div class="col-md-2">
+                    <div class="form-group">
+                        <label>IP Address</label>
+                          <div class="search_select_box">
+                            <select name="ipaddress" id="ipaddress" class="selectpicker form-control" data-style="py-0" data-live-search="true" onchange="getReportBy(this.value,'I')" >
+                              <option selected="true" disabled="disabled">--- Select ---</option>  
+                              {%for sdmlist in list_of_ip%}                              
+                              <option value="{{sdmlist.sdm_id}}">{{sdmlist.ip_address}}</option>
+                              {%endfor%}                                                                                                                                                         
+                            </select>
+                          </div>
+                      </div> 
+                  </div>   
+                  <div class="col-md-12 text-center" id="sumdatakeeper">
+                    <div class='table-responsive'>
+                      <table class='table mb-0 tbl-server-info' id='repotab'>
+                        <thead>
+                          <tr>
+                            <th>S.no</th>
+                            <th>Product Details</th>                            
+                            <th>Serial No</th>
+                            <th>Section Name</th>
+                            <th>Designation Name</th>
+                            <th>User Name</th>
+                            <th>IP Address</th>
+                            <th>Current Status</th>
+                            <th>Product Status</th>
+                          </tr>
+                        </thead>
+                        <tbody> 
+
+                        </tbody>                
+                      </table>               
+                  </div>
+                  </div>
+                </div>                
+              </div>
+
+            
+
+          </div>
+        </div> 
+      </div>
+
+      
+      <!-- ROW END-->
+      <!-- Page end  -->
+  </div>
+</div>
+  <script>
+    function getReportBy(rid,so){      
+      $.ajax({
+      type: "GET",
+      url: "/getReportBy",
+      data: {
+        rid: rid,
+        source: so
+      },
+      success: function (data) {                
+        $('#repotab').find("tr:gt(0)").remove();
+        $('#repotab tr:last').after(data);  
+      },
+    });
+      
+    }    
+  </script>
+{% endblock %}

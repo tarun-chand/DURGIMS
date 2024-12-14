@@ -1,0 +1,227 @@
+{% extends "home.html" %} {% block theDashboard %}
+<style>
+  .dt-search{
+    float: right;
+  }
+</style>
+<div class="content-page">  
+  
+    <div class="container-fluid add-form-list" id="courtsumdata" style="display:block;" >
+      <div class="row">
+        <div class="col-lg-12">
+      
+          <div class="card card-block card-stretch card-height">
+            {%if source == 'inhand'%}            
+              <div
+                class="card-header d-flex align-items-center justify-content-between pt-2 pb-2" style="background-color: antiquewhite;">
+                <div class="header-title mx-auto ">
+                  <h4 class="card-title">IN-STOCK PRODUCTS DETAILS</h4>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top: 10px">                                                            
+                <div class="col-md-12 text-center" id="sumdatakeeper">
+                  <div class="table-responsive">
+                    <table
+                      class="data-table table mb-0 tbl-server-info"
+                      style="width: 100% !important; table-layout: fixed"
+                      id="sumtabdata"
+                    >
+                      <thead>
+                        <tr>
+                          <th>S.no</th>
+                          <th>Product Category</th>
+                          <th>Product Name</th>
+                          <th>Product Make Model</th>
+                          <th>Serial No</th>
+                          <th>Action</th>                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {%for r in result%}
+                        <tr>
+                          <td>{{forloop.counter}}</td>
+                          <td>{{r.0}}</td>
+                          <td>{{r.1}}</td>
+                          <td>{{r.2}}</td>
+                          <td>{{r.3}}</td>
+                          <td></td>                          
+                        </tr>
+                        {%endfor%}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            {%elif source == 'issued'%}
+              <div
+                class="card-header d-flex align-items-center justify-content-between pt-2 pb-2" style="background-color: antiquewhite;">
+                <div class="header-title mx-auto ">
+                  <h4 class="card-title">ISSUED PRODUCTS DETAILS</h4>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top: 10px">                                                            
+                <div class="col-md-12 text-center" id="sumdatakeeper">
+                  <div class="table-responsive">
+                    <table
+                      class="data-table table mb-0 tbl-server-info"
+                      style="width: 100% !important; table-layout: fixed"
+                      id="sumtabdata"
+                    >
+                      <thead>
+                        <tr>
+                          <th>S.no</th>
+                          <th>Product Category</th>
+                          <th>Product Name</th>
+                          <th>Product Make Model</th>
+                          <th>Serial No</th>
+                          <th>Court/Section</th>
+                          <th>Issued To</th>
+                          <th>Current User</th>
+                          <th>Action</th> 
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {%for r in result%}
+                        <tr>
+                          <td>{{forloop.counter}}</td>
+                          <td>{{r.0}}</td>
+                          <td>{{r.1}}</td>
+                          <td>{{r.2}}</td>
+                          <td>{{r.3}}</td>
+                          <td>{{r.4}}</td>
+                          <td>{{r.5}}</td>
+                          <td>{{r.6}}</td>
+                          <td></td>
+                        </tr>
+                        {%endfor%}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              {%elif source == 'repair'%}
+              <div
+                class="card-header d-flex align-items-center justify-content-between pt-2 pb-2" style="background-color: antiquewhite;">
+                <div class="header-title mx-auto ">
+                  <h4 class="card-title">NEED TO REPAIR PRODUCTS DETAILS</h4>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top: 10px">                                                            
+                <div class="col-md-12 text-center" id="sumdatakeeper">
+                  <div class="table-responsive">
+                    <table
+                      class="data-table table mb-0 tbl-server-info"
+                      style="width: 100% !important; table-layout: fixed"
+                      id="sumtabdata"
+                    >
+                      <thead>
+                        <tr>
+                          <th>S.no</th>
+                          <th>Product Category</th>
+                          <th>Product Name</th>
+                          <th>Product Make Model</th>
+                          <th>Serial No</th>
+                          <th>Problem Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {%for r in result%}
+                        <tr>
+                          <td>{{forloop.counter}}</td>
+                          <td>{{r.0}}</td>
+                          <td>{{r.1}}</td>
+                          <td>{{r.2}}</td>
+                          <td>{{r.3}}</td>
+                          <td>{{r.4}}</td>                         
+                        </tr>
+                        {%endfor%}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              {%else%}
+              <div
+                class="card-header d-flex align-items-center justify-content-between pt-2 pb-2" style="background-color: antiquewhite;">
+                <div class="header-title mx-auto ">
+                  <h4 class="card-title">DEAD PRODUCTS DETAILS</h4>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top: 10px">                                                            
+                <div class="col-md-12 text-center" id="sumdatakeeper">
+                  <div class="table-responsive">
+                    <table
+                      class="data-table table mb-0 tbl-server-info"
+                      style="width: 100% !important; table-layout: fixed"
+                      id="sumtabdata"
+                    >
+                      <thead>
+                        <tr>
+                          <th>S.no</th>
+                          <th>Product Category</th>
+                          <th>Product Name</th>
+                          <th>Product Make Model</th>
+                          <th>Serial No</th>
+                          <th>Remark</th>
+                          <th>Location</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {%for r in result%}
+                        <tr>
+                          <td>{{forloop.counter}}</td>
+                          <td>{{r.0}}</td>
+                          <td>{{r.1}}</td>
+                          <td>{{r.2}}</td>
+                          <td>{{r.3}}</td>
+                          <td>{{r.4}}</td>
+                          <td>Store Room</td>
+                        </tr>
+                        {%endfor%}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            {%endif%}
+          </div>
+        </div>
+      </div>    
+    </div>   
+  
+</div>
+
+<script>
+
+function courtSectionSummaryData() {  
+  $.ajax({
+      type: "GET",
+      url: "/getCourtSectionSummaryData",      
+      success: function (data) {
+        $("#sumdatakeeper").html(data.tabdata);  
+        // $("#sumdatakeeper tr:last").before(data.tabdata);                      
+      },  
+      complete: function () {
+          $("#sumtabdata").DataTable({
+            destroy: true,
+            buttons: [
+              {
+                extend: "pdfHtml5",
+                orientation: "landscape",                
+              },
+              {
+                extend:"excelHtml5",               
+              }
+            ],
+            dom: "Bfrtip",
+            bPaginate: false,
+            ScrollCollapse: true,
+          });        
+      },    
+    });
+}
+
+
+</script>
+{% endblock %}

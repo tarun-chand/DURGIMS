@@ -1,0 +1,25 @@
+{%if repFlag == 'estRepo' %}
+    <option selected="true" disabled="disabled">--- Select ---</option> 
+    <option value="ALL">All</option>                           
+    {%for repo in result %}
+        <option value="{{repo.est_id}}">{{repo.est_name}}</option>
+    {%endfor%}
+{%elif repFlag == 'courtRepo'%}
+    <option selected="true" disabled="disabled">--- Select ---</option> 
+    <option value="ALL">All</option>                           
+    {%for repo in result %}
+        <option value="{{repo.section_id}}">{{repo.section_name}}</option>
+    {%endfor%}
+{%elif repFlag == 'secRepo'%}
+    <option selected="true" disabled="disabled">--- Select ---</option> 
+    <option value="ALL">All</option>                           
+    {%for repo in result %}
+        <option value="{{repo.section_id}}">{{repo.section_name}}</option>
+    {%endfor%}
+{%elif repFlag == 'usrRepo'%}
+    <option selected="true" disabled="disabled">--- Select ---</option> 
+    <option value="ALL">All</option>                           
+    {%for repo in result %}
+        <option value="{{repo.usr_id}}">{{repo.usr_name}}</option>
+    {%endfor%}
+{%endif%}

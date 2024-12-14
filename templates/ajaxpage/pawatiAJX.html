@@ -1,0 +1,40 @@
+{%if flag == 'pawatidetails'%}
+<div class='table-responsive'>
+    <table class='data-table table mb-0 tbl-server-info' style='width:99% !important; table-layout:fixed' >
+        <thead>            
+            <tr style='background-color: aliceblue;font-weight: bolder;'>
+                <th colspan='7'><span style='color: black;font-size: 17px;'>Court/Section Name :- </span><span style='color: dodgerblue;'>{{csname}}</span></th>
+            </tr>
+            <tr style='background-color: aliceblue;font-weight: bolder;'>                
+                <th colspan=2><span style='color: black;'>Assigned To</span> : <span style='color: crimson;'>{{des_name}}</span></th>
+                <th colspan=2><span style='color: black;'>Current Staff</span> : <span style='color: crimson;'>{{usrname}}</span></th>              
+                <th><span style='color: black;'>IP Address</span> : <span style='color: crimson;'>{{ipaddr}}</span></th>
+                <th colspan=2><span style='color: black;'>Date Of Joining</span> : <span style='color: crimson;'>{{doj}}</span></th>
+    
+            </tr>
+            <tr>
+                <th>S.no</th>
+                <th>Product Category</th>
+                <th>Product Make Model</th>
+                <th>Serial No</th>
+                <th>No Of Item</th>
+                <th>Issue/Charge Date</th>
+                <th>Issue Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for r in usr_list%}
+                <tr>
+                    <td>{{forloop.counter}}</td>                    
+                    <td>{{r.0}}</td>
+                    <td>{{r.1}} - {{r.2}}</td>
+                    <td>{{r.3}}</td>
+                    <td>{{r.4}}</td>
+                    <td>{{r.5}}</td>
+                    <td>{{r.6}}</td>
+                </tr>
+            {%endfor%}  
+        </tbody>
+    </table><input type='hidden' name='emp_id'  id='emp_id' value='{{empid}}'><input type='hidden' name='pdffilename'  id='pdffilename' value='{{usrname}}_{{empid}}'>
+</div>
+{%endif%}

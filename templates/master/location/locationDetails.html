@@ -1,0 +1,230 @@
+{% extends "home.html" %}
+{% block locationDetails %}
+<div class="content-page">
+    <div class="container-fluid add-form-list">
+      <div class="row">
+        {%if flag == 'UPDATE'%}
+          <div class="col-sm-3">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between">
+                <div class="header-title" style="text-align: center">
+                  <h4 class="card-title"><span class="text-danger mt-2">Update</span> Location Details</h4>
+                </div>
+              </div>
+              <div class="card-body">
+                <form action="{% url 'locationDetailsUpdate' %}" data-toggle="validator" method="post">
+                  {% csrf_token %}
+                        <div class="row">
+                        <div class="col-md-12">
+                              {%for msg in messages%}
+                                    {% if msg.tags == "success" %}
+                                          <div class="alert alert-danger" role="alert">
+                                                <div class="iq-alert-text">
+                                                      <b>{{ msg }}</b> 
+                                                </div>
+                                          </div>
+                                    {%endif%}
+                              {%endfor%}
+                        </div>
+                              {%for locdata in locdata%}
+                                    <input type="hidden" name="locid" value={{locdata.location_id}} > 
+                  <div class="col-md-12">                        
+                      <div class="form-group">
+                          <label>Section Type *</label>
+                          <select name="sectiontype" id="sectiontype"  class="selectpicker form-control" data-style="py-0" onchange="filterSection(this.value)">
+                            <option selected="true" value="{{locdata.section_id.section_type}}">{{locdata.section_id.section_type}}</option> 
+                              <option value="Court">Court</option>
+                              <option value="Section">Section</option>
+                          </select>
+                      </div>  
+                  </div>
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <label>Section Name *</label>
+                              <div class="search_select_box" >
+                                  <select name="sectionname" id="sectionname"  class="selectpicker form-control" data-style="py-0" data-live-search="true">
+                                    <option selected="true" value="{{locdata.section_id.section_id}}">{{locdata.section_id}}</option> 
+                                  </select>
+                              </div>
+                          </div> 
+                      </div>
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Floor *</label>
+                          <input type="text" name="floor" class="form-control" value="{{locdata.floor}}"  >
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Room No *</label>
+                          <input type="text" name="room" class="form-control" value="{{locdata.roomno}}" >
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Landmark</label>
+                          <input type="text" name="landmark" class="form-control" value="{{locdata.landmark}}"  >
+                      </div>
+                  </div>
+    
+                  {%endfor%}
+                  </div>
+                  <div class="col-md-12 text-center">
+                      <div class="form-group">
+                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                      </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        {%else%}
+          <div class="col-sm-3">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between">
+                <div class="header-title" style="text-align: center">
+                  <h4 class="card-title"><span class="text-primary mt-2">New</span> Location Details</h4>
+                </div>
+              </div>
+              <div class="card-body">
+                <form action="{% url 'locationDetailsSubmit' %}" data-toggle="validator" method="post">
+                  {% csrf_token %}
+                  <div class="row">
+                  <div class="col-md-12">
+                        {%for msg in messages%}
+                              {% if msg.tags == "info" %}
+                                    <div class="alert alert-warning" role="alert">
+                                          <div class="iq-alert-text">
+                                                <b>{{ msg }}</b> 
+                                          </div>
+                                    </div>
+                              {% elif msg.tags == "success" %}
+                              <div class="alert alert-success" role="alert">
+                                    <div class="iq-alert-text">
+                                          <b>{{ msg }}</b> 
+                                    </div>
+                              </div>
+                              {%endif%}
+                        {%endfor%}
+                      <div class="form-group">
+                          <label>Section Type *</label>
+                          <select name="sectiontype" id="sectiontype"  class="selectpicker form-control" data-style="py-0" onchange="filterSection(this.value)">
+                            <option selected="true" disabled="disabled">--- Select ---</option>  
+                              <option value="Court">Court</option>
+                              <option value="Section">Section</option>
+                          </select>
+                      </div> 
+                  </div>
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <label>Section Name *</label>
+                              <div class="search_select_box" >
+                                  <select name="sectionname" id="sectionname"  class="selectpicker form-control" data-style="py-0" data-live-search="true">
+                                      <option selected="true">--- Select ---</option>                           
+                                  </select>
+                              </div>
+                          </div> 
+                      </div>
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Floor *</label>
+                          <input type="text" name="floor" class="form-control" placeholder="Floor Name"  >
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Room No *</label>
+                          <input type="text" name="room" class="form-control" placeholder="Room No"  >
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Landmark</label>
+                          <input type="text" name="landmark" class="form-control" placeholder="Landmark if any"  >
+                      </div>
+                  </div>
+    
+    
+                  </div>
+                  <div class="col-md-12 text-center">
+                      <div class="form-group">
+                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                      </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        {%endif%}
+  
+        <div class="col-sm-9">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                  <div class="header-title" style="text-align: center">
+                    <h4 class="card-title">All Location Details</h4>
+                  </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                          <div class="col-lg-12">
+                                <div class="table-responsive rounded mb-3" style="overflow-y: scroll;height: 530px;">
+                                      <table class="data-table table mb-0 tbl-server-info">
+                                      <thead class="bg-white text-uppercase">
+                                            <tr class="ligth ligth-data">
+                                                  <th>Section Type</th>
+                                                  <th>Section Name</th>
+                                                  <th>Floor</th>
+                                                  <th>Room No</th>
+                                                  <th>Landmark</th>
+                                                  <th>Action</th>
+                                            </tr>
+                                      </thead>
+                                      <tbody class="ligth-body">                              
+                                            {%for loclist in list_all_loc%}
+                                            <tr>         
+                                                  <td>{{loclist.section_id.section_type}}</td>
+                                                  <td>{{loclist.section_id}}</td> 
+                                                  <td>{{loclist.floor}}</td> 
+                                                  <td>{{loclist.roomno}}</td> 
+                                                  <td>{{loclist.landmark}}</td>                                   
+                                                  <td>
+                                                  <div class="d-flex align-items-center list-action">
+                                                        
+                                                        <a class="badge bg-success mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"
+                                                        href=" {% url 'locationDetailsUpdateRedirect'%}?locid={{loclist.location_id}}">Edit</a>
+                                                        
+                                                  </div>
+                                                  </td>
+                                            </tr>   
+                                            {%endfor%}                                                                         
+                                      </tbody>
+                                      </table>
+                                </div>
+                            </div>
+                      
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+      <!-- ROW END-->
+      <!-- Page end  -->
+    </div>
+  </div>
+  <script>
+    function filterSection(sectype){
+      $.ajax({
+        type:"GET",
+        url: "/locationSectionFilter",
+        data:{
+          sectype: sectype
+        },
+        success: function(data) 
+        {
+           $('#sectionname').html(data);
+           $('#sectionname').selectpicker('refresh');
+        }
+      })
+    }
+  </script>
+{% endblock %}

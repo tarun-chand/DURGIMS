@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            .comp {
+                width: 100%;       
+                margin: 0px !important;
+                padding: 0px !important;                
+            }
+            table.comp  td  {
+                border: 0.08rem solid black;
+            }
+            table.copy{
+                width: 100%;
+                
+            }
+            table,td{
+                margin: 5px;
+                padding: 5px;
+            }  
+            body{
+                font-size: 12px;
+                margin-left: 0%;
+                padding: 0%;
+            }                                      
+        </style>
+    </head>
+    <body>
+        <table id="main" style="width: 100%;" >
+            <tr>
+                <td style="border: 2px solid black;padding: 0px;width:50%;">
+                    <table class="copy" >
+                        <tr>                
+                           <td style="width: 15%;"><span style="font-size:12px;">Rec.No: {{t_det.trans_id}}</span></td>
+                            <td style="text-align:left ;" colspan="4" ><span style="font-size:16px;margin-left: 15%;"><b>District & Sessions Court, Durg</b></span></td>                            
+                        </tr>
+                        <tr>
+                            <td colspan="3" ><b>Recipient Copy</b></td> 
+                            <td colspan="3"style="text-align: right;">Date:<span id="rcdate"></span></td>
+                        </tr>
+                       
+                        <tr><td style="text-align: center;font-size:12px ;" colspan="5" ><b>Computer Peripherals Issue Receipt</b></td></tr>
+                        <tr><td style="padding: 0px !important;">&nbsp;</td></tr>
+                        <tr><td style="font-size:12px ;" colspan="3"><b>Issued To</b></td></tr>
+                        <tr><td style="padding-top:0px !important" colspan="3">Name : {{t_det.sdm}}</td></tr>
+                        <tr><td style="padding-top:0px !important" colspan="3">Designation : {{t_det.sdm.staff.staff_des_name}}</td></tr>
+                        <tr><td style="padding-top:0px !important" colspan="3">Establishment Name : {{t_det.sdm.section.building.est.est_name}}</td></tr>
+                        <tr><td style="padding-top:0px !important" colspan="3">Court/Section Name : {{t_det.sdm.section.section_name}}</td></tr>
+                        <tr><td style="padding-top:0px !important" colspan="3">Issued Date : {{t_det.trans_issue_date|date:"d/m/Y"}}</td></tr>
+                        
+                        
+                        <tr><td style="text-align: center;font-size:12px ;" colspan="5" ><b>Issued Items</b></td></tr>
+                        <tr>
+                            <td colspan="5">
+                                <table class="comp" style="border: 0.08rem solid black ;border-collapse:collapse" >
+                                    <tr>
+                                        <td style="width: 1%;"><b>S.No</b></th>
+                                        <td><b>Product Details</b></td>
+                                        <td><b>Serial No</b></td>
+                                        <td style="width: 1%;"><b>Qty</b></td>
+                                        <td><b>Remarks</b></td>
+                                    </tr>
+                                    {%for d in t_det%}
+                                    <tr>
+                                        <td>{{ forloop.counter }}.</td>
+                                        <td>{{d.product.product_cat_id.product_cat_name}} : {{d.product_id.product_com_name}} ({{d.product_id.product_model.product_mod_name}})</td>
+                                        <td>{% if d.product_id.product_serialno %} {{d.product_id.product_serialno}} {%else%} NA {%endif%} </td>
+                                        <td>{{d.no_of_item_issue}}</td>
+                                        <td>{%if d.issue_remarks%} {{d.issue_remarks}} {%else%} - {%endif%}</td>
+                                    </tr>
+                                    {%endfor%}
+                                </table>
+                            </td>
+                        </tr>        
+                        <tr>
+                            <td colspan="5" style="font-size: 17px;">
+                                <b> नोट :- कर्मचारियों से अनुरोध है कि स्थानांतरण या सेवानिवृत्त होने पर जारी किए गए सभी कंप्यूटर उपकरण के संबंध में सर्वर रूम में आवश्यक रूप से संपर्क करें । </b>
+                            </td>                       
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td>&nbsp;&nbsp;</td>
+                            
+                        </tr>                        
+                        <tr>
+                            <td colspan="1"></td>
+                            <td>&nbsp;&nbsp;</td>
+                            <td>&nbsp;&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td colspan="1"></td>
+                            <td colspan="1"></td>
+                            <td colspan="1"></td>            
+                            <td><b>Receiver Signature</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td>&nbsp;&nbsp;</td>
+                            <td>&nbsp;&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td>&nbsp;&nbsp;</td>
+                            <td>&nbsp;&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td>&nbsp;&nbsp;</td>
+                            <td>&nbsp;&nbsp;</td>
+                        </tr>
+                                        
+                                           
+                        
+                    </table>
+                </td>
+                <td style="border: 3px dashed black;padding: 0px !important;"></td>
+                <td style="border: 2px solid black;padding: 0px;width:50%;">
+                    <table class="copy" >
+                       
+                        <tr>                
+                            <td style="width: 15%;"><span style="font-size:12px;">Rec.No: {{t_det.trans_id}}</span></td>
+                            <td style="text-align:left ;" colspan="4" ><span style="font-size:16px;margin-left: 15%;"><b>District & Sessions Court, Durg</b></span></td>                            
+                        </tr>
+                        <tr>
+                            <td colspan="3" ><b>Office Copy</b></td> 
+                            <td colspan="3"style="text-align: right;">Date:<span id="ocdate"></span></td>
+                        </tr>
+                       
+                        <tr><td style="text-align: center;font-size:12px ;" colspan="5" ><b>Computer Peripherals Issue Receipt</b></td></tr>
+                        <tr><td style="padding: 0px !important;">&nbsp;</td></tr>
+                        <tr><td style="font-size:12px ;" colspan="3"><b>Issued To</b></td></tr>
+                        <tr><td style="padding-top:0px !important" colspan="3">Name : {{t_det.usr_id.usr_name}}</td></tr>
+                        <tr><td style="padding-top:0px !important" colspan="3">Designation : {{t_det.usr_id.usr_des_id.usr_des_name}}</td></tr>
+                        <tr><td style="padding-top:0px !important" colspan="3">Establishment Name : {{t_det.section_id.building_name.est_id.est_name}}</td></tr>
+                        <tr><td style="padding-top:0px !important" colspan="3">Court/Section Name : {{t_det.section_id.section_name}}</td></tr>
+                        <tr><td style="padding-top:0px !important" colspan="3">Issued Date : {{t_det.trans_issue_date|date:"d/m/Y"}}</td></tr>
+                        
+                        
+                        <tr><td style="text-align: center;font-size:12px ;" colspan="5" ><b>Issued Items</b></td></tr>
+                        <tr>
+                            <td colspan="5">
+                                <table class="comp" style="border: 0.08rem solid black ;border-collapse:collapse" >
+                                    <tr>
+                                        <td style="width: 1%;"><b>S.No</b></th>
+                                        <td><b>Product Details</b></td>
+                                        <td><b>Serial No</b></td>
+                                        <td style="width: 1%;"><b>Qty</b></td>
+                                        <td><b>Remarks</b></td>
+                                    </tr>
+                                    {%for d in prod_trn%}
+                                    <tr>
+                                        <td>{{ forloop.counter }}.</td>
+                                        <td>{{d.product_id.product_cat_id.product_cat_name}} : {{d.product_id.product_com_name}} ({{d.product_id.product_model.product_mod_name}})</td>
+                                        <td>{% if d.product_id.product_serialno %} {{d.product_id.product_serialno}} {%else%} NA {%endif%} </td>
+                                        <td>{{d.no_of_item_issue}}</td>
+                                        <td>{%if d.issue_remarks%} {{d.issue_remarks}} {%else%} - {%endif%}</td>
+                                    </tr>
+                                    {%endfor%}
+                                </table>
+                            </td>
+                        </tr>        
+                        <tr>
+                           <td colspan="1"></td>                                                                                                                    
+                        </tr>
+                         <tr>
+                           <td colspan="1"></td>                                                                                                                    
+                        </tr>
+                        <tr>
+                           <td colspan="1"></td>                                                                                                                    
+                        </tr>
+                        
+                        <tr>
+                            <td colspan="1"></td>
+                            
+                            <td>&nbsp;&nbsp;</td>  
+                            <td>&nbsp;&nbsp;</td>
+                        </tr>  
+                        <tr>
+                            <td colspan="1"></td>
+                            
+                            <td>&nbsp;&nbsp;</td>  
+                            <td>&nbsp;&nbsp;</td>
+                        </tr>                       
+                        <tr>
+                            <td colspan="1"></td>
+                            <td>&nbsp;&nbsp;</td>
+                            <td>&nbsp;&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td colspan="1"></td>
+                            <td colspan="1"></td>
+                            <td colspan="1"></td>            
+                            <td ><b>Receiver Signature</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td>&nbsp;&nbsp;</td>
+                            <td>&nbsp;&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td>&nbsp;&nbsp;</td>
+                            <td>&nbsp;&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td>&nbsp;&nbsp;</td>
+                            <td>&nbsp;&nbsp;</td>
+                        </tr>
+                                   
+                        
+                    </table>
+                </td>
+            </tr>                        
+        </table>
+
+        <script>
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            let mm = today.getMonth() + 1; // Months start at 0!
+            let dd = today.getDate();
+
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+
+            const formattedToday = dd + '/' + mm + '/' + yyyy;
+            document.getElementById("rcdate").textContent = formattedToday; 
+            document.getElementById("ocdate").textContent = formattedToday; 
+        </script>
+    </body>
+</html>

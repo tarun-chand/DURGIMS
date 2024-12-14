@@ -1,0 +1,210 @@
+{% extends "home.html" %} {% block returnDetails %}
+
+<style>
+  .mytab.table.table-responsive tr td {
+    padding: 5px !important;
+    margin: 5px !important;
+  }
+</style>
+<div class="content-page">
+  <div class="container-fluid add-form-list">
+    <div class="col-md-12">
+      {%for msg in messages%} {% if msg.tags == "info" %}
+      <div class="alert alert-warning" role="alert">
+        <div class="iq-alert-text">
+          <b>{{ msg }}</b>
+        </div>
+      </div>
+      {% elif msg.tags == "success" %}
+      <div class="alert alert-success" role="alert">
+        <div class="iq-alert-text">
+          <b>{{ msg }}</b>
+        </div>
+      </div>
+      {%endif%} {%endfor%}
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+            <div class="header-title" style="text-align: center">
+              <h4 class="card-title">New Replace</h4>
+            </div>
+          </div>
+          <div class="card-body">
+            <form
+              action="{% url 'replaceDetailsSubmit' %}"
+              data-toggle="validator"
+              method="post"
+            >
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Transfer Date *</label>
+                    <input
+                      type="date"
+                      name="transferDate"
+                      id="ret_date"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>User Name :-: Designation :-: Section Namee *</label>
+                    <div class="search_select_box">
+                      <select
+                        name="userdetail"
+                        id="userdetail"
+                        class="selectpicker form-control"
+                        data-style="py-0"
+                        data-live-search="true"
+                        onchange="getUserIssueStuff()"
+                        required
+                      >
+                        <option selected="true" disabled="disabled">
+                          --- Select ---
+                        </option>
+                        {%for ulist in usr_list%}                       
+                        <option value="{{ulist.3}}">                          
+                          {{ulist.0}} - {{ulist.1}} - {{ulist.2}}
+                        </option>
+                        {%endfor%}
+                      </select>
+                    </div>
+                  </div>
+                </div>                               
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Issued Product [OLD PRODUCT] *</label>
+                    <div class="search_select_box">
+                      <select
+                        name="issuedproduct"
+                        id="issuedproduct"
+                        class="selectpicker form-control"
+                        data-style="py-0"
+                        data-live-search="true"
+                        onchange="getReplaceListStuff()"
+                        required
+                      >
+                        <option selected="true" disabled="disabled">
+                          --- Select ---
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Replace Product With [NEW PRODUCT] *</label>
+                    <div class="search_select_box">
+                      <select
+                        name="newproducttoissue"
+                        id="newproducttoissue"
+                        class="selectpicker form-control"
+                        data-style="py-0"
+                        data-live-search="true"
+                        required
+                      >
+                        <option selected="true" disabled="disabled">
+                          --- Select ---
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">                                                           
+                  <label>Product Status *</label>                            
+                    <div class="form-group">
+                      <select name="productstatus" class="selectpicker form-control" data-style="py-0" required>
+                        <option selected="true" > --- Select --- </option>
+                        <option value="Working">Working</option>
+                        <option value="Needs To Repair">Needs To Repair</option>
+                        <option value="Dead Stock">Dead Stock</option>
+                      </select>  
+                    </div>                   
+              </div>
+              <div class="col-md-6">
+                <label>Health Remark of Returning Product*</label>
+                <div class="form-group">
+                  <textarea
+                    name="healthRemark"
+                    class="form-control"
+                    rows="1" 
+                  ></textarea>
+                </div>
+              </div>
+                                
+                <div class="col-md-12">
+                  <div class="form-group text-center">
+                    <button
+                      type="submit"
+                      id="subButton"
+                      class="btn btn-primary mr-2"
+                    >
+                      Replace
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!--END OF TABLE row-->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ROW END-->
+    <!-- Page end  -->
+  </div>
+</div>
+
+<script>
+  document.getElementById("ret_date").valueAsDate = new Date();
+
+  
+  function getUserDetails() {
+    issueto = $("#issueto").val();
+    $.ajax({
+      type: "GET",
+      url: "/issueUserDetailsFilter",
+      data: {
+        issueto: issueto,
+      },
+      success: function (data) {
+        $("#userdetail").html(data);
+        $("#userdetail").selectpicker("refresh");
+      },
+    });
+  }
+  function getUserIssueStuff() {
+    userdetail = $("#userdetail").val();
+    $.ajax({
+      type: "GET",
+      url: "/getAllIssuedStuffOfUser",
+      data: {
+        userdetail: userdetail,
+      },
+      success: function (data) {
+        $("#issuedproduct").html(data);
+        $("#issuedproduct").selectpicker("refresh");
+      },
+    });
+  }
+  function getReplaceListStuff() {
+    issuedproduct = $("#issuedproduct").val();
+    $.ajax({
+      type: "GET",
+      url: "/getAllReplaceListStuff",
+      data: {
+        issuedproduct: issuedproduct,
+      },
+      success: function (data) {
+        $("#newproducttoissue").html(data);
+        $("#newproducttoissue").selectpicker("refresh");
+      },
+    });
+  }
+</script>
+{% endblock %}

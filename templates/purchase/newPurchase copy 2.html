@@ -1,0 +1,523 @@
+{% extends "home.html" %} {% block productDetails %}
+
+<div class="content-page">
+  <div class="container-fluid add-form-list">
+    <input type="hidden" id="flag" value="{{flag}}" />
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+            <div class="header-title" style="text-align: center">
+              <h4 class="card-title">
+                <span class="text-primary mt-2">New</span> Product
+                Purchase/Receive
+              </h4>
+            </div>
+          </div>
+          
+          <div class="card-body">          
+            <ul class="nav nav-tabs" id="myTab-1" role="tablist">
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  id="home-tab"
+                  data-toggle="tab"
+                  href="#home"
+                  role="tab"
+                  aria-controls="home"
+                  aria-selected="true"
+                  >Puchasing/Receiving Details ></a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  id="profile-tab"
+                  data-toggle="tab"
+                  href="#profile"
+                  role="tab"
+                  aria-controls="profile"
+                  aria-selected="false"
+                  >Product Details</a
+                >
+              </li>              
+            </ul>
+            {% comment %} <form action="{% url 'newPuchaseSubmit' %}" method="post" data-toggle="validator" enctype = "multipart/form-data" >   {% endcomment %}
+            <form action="{% url 'newPuchaseSubmit' %}" method="post" enctype = "multipart/form-data" >
+              {% csrf_token %}
+            <div class="tab-content" id="myTabContent-2">                         
+              <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row">                  
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Purchase Date *</label>
+                        <input
+                          type="date"
+                          name="purchase_date"
+                          id="purchase_date"
+                          class="form-control"
+                          placeholder="Date"
+                          
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Bill No./Memo No. *</label>
+                        <input
+                          type="text"
+                          name="bill_memo_no"
+                          id="bill_memo_no"
+                          class="form-control"
+                          placeholder="Bill No./Memo No."
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Purchased By :- *</label>
+                        <div class="search_select_box">
+                          <select
+                            name="purchased_by"
+                            id="purchased_by"
+                            class="selectpicker form-control"
+                            data-style="py-0"
+                            data-live-search="true"
+                          >
+                            <option selected="true" disabled="disabled">
+                              -- Purchased By --
+                            </option>
+                            <option value="High Court Bilaspur">High Court Bilaspur</option>
+                            <option value="District Court Durg">District Court Durg</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Purchased For :- *</label>
+                        <div class="search_select_box">
+                          <select
+                            name="purchased_for"
+                            id="purchased_for"
+                            class="selectpicker form-control"
+                            data-style="py-0"
+                            data-live-search="true"
+                          >
+                            <option selected="true" disabled="disabled">
+                              -- Purchased For --
+                            </option>
+                            <option value="District Court Durg">District Court Durg</option>
+                            <option value="District Court Durg - POCSO COURT">
+                              District Court Durg - POCSO COURT
+                            </option>
+                            <option value="District Court Durg - SPECIAL COURT">
+                              District Court Durg - SPECIAL COURT
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Bill / Memo</label>
+                        <input
+                          type="file"
+                          class="form-control image-file"
+                          name="billmemofile"
+                          accept=".pdf"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Remark </label>
+                        <textarea
+                          class="form-control"
+                          name="purchase_remarks"
+                          id="exampleFormControlTextarea1"
+                          rows="1"
+                        ></textarea>
+                      </div>
+                    </div>                  
+                    <div class="col-md-12 text-center">
+                      <div class="form-group">
+                        <a href="#" class="btn btn-primary mr-2" onclick="changeActive()">Next >></a>             
+                      </div>
+                    </div>  
+                  </div>              
+              </div>              
+              <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">               
+                  <div class="row">
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label>Product Category:-:[Type] *</label>
+                        <div class="search_select_box">
+                          <select
+                            name="producttype"
+                            id="producttype"
+                            class="selectpicker form-control"
+                            data-style="py-0"
+                            data-live-search="true"
+                            onchange="checkProductType()"
+                          >
+                            <option selected="true" disabled="disabled">
+                              -- Category:-:[ Type ] --
+                            </option>
+                            {%for pclist in list_all_pc%}
+                            <option value="{{pclist.product_cat_id}}">
+                              {{pclist.product_cat_name}}:-:[{{pclist.product_type}}]
+                            </option>
+                            {%endfor%}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label>Product *</label>
+                        <div class="search_select_box">
+                          <select
+                            name="modelname"
+                            id="modelname"
+                            class="selectpicker form-control"
+                            data-style="py-0"
+                            data-live-search="true"
+                          >
+                            <option selected="true" disabled="disabled">
+                              -- Company Name :-: [ Model Name] --
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group" id="toner" style="display: none">
+                        <label>Cartridge Toner</label>
+                        <input
+                          type="text"
+                          name="tonarcart"
+                          id="tonerName"                           
+                          class="form-control"
+                          placeholder="Cartridge Toner Name/No"
+                        />
+                      </div>
+                    </div>                    
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label>Remark </label>
+                        <textarea
+                          class="form-control"
+                          name="remarks"
+                          id="proremark"
+                          rows="1"
+                        ></textarea>
+                      </div>
+                    </div>
+                    <div class="col-2" id="noofitembox" style="display:none;">
+                      <div class="form-group">
+                        <label>No of Item*</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="noofitem"
+                          id="noofitem"                        
+                        />
+                      </div>                                              
+                    </div>   
+                    <div class="col-2" id="uploadsrnobox" style="display:none;">
+                      <div class="form-group">
+                        <label>Upload Serial Number *</label>
+                        <input
+                          type="file"
+                          class="form-control image-file"
+                          name="filesrnumber"
+                          id="srnumber"
+                          accept=".xls,.xlsx"
+                        />
+                      </div>                                              
+                    </div>                    
+                    <div class="col-1" id="srnobox" style="display:none;">
+                      <div class="form-group">
+                        <label>Serial Numbers</label>
+                        <button id="snbutton" type="button" class="btn mb-1 bg-danger-light" data-toggle="modal" data-target="#exampleModalScrollable" onclick="getSerialNumber()">
+                          Upload<span id="totalSn" class="badge badge-danger ml-2">0</span>
+                        </button>                      
+                      </div>
+                      
+                    </div>
+                    <div class="col-2" id="boximage" style="display:none;">
+                      <div class="form-group">
+                        <label>Box Image</label>
+                        <input type='file' class='form-control image-file' id='boxdetails' name='boxdetails'>
+                      </div>
+                    </div>
+                    
+                    <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true" style="display:none;">
+                      <div class="modal-dialog modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalScrollableTitle"  style="text-align: center;"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body" id='dataHolder'>
+                            <table id="takesr" border=1 width="100%" style="text-align: center;">                                                
+                            </table> 
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                                 
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="modal fade" id="ImageModalScrollable"  role="dialog" aria-labelledby="ImageModalScrollableTitle" aria-hidden="true" style="display:none;">
+                      <div class="modal-dialog" role="document" >
+                        <div class="modal-content" style="max-width: 100%;max-height: 100%;">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="ImageModalScrollableTitle" style="text-align: center;"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body" id='imageHolder'>                            
+                            <img id='my_image' src='' width='500' height='500'>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                                 
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    
+                    
+                    <div>   <!--Submit Button -->      
+                      <div class="form-group">
+                      <label>&nbsp;</label><br>
+                        <a href="#" class="btn btn-success" onclick="addProductDetails()">Add</a>
+                      </div>
+                    </div>   
+                    <div class="col-md-12">
+                      <table id="productData" class="table  table-striped">
+                          <thead>
+                              <tr>
+                                <th>S.No</th>                                                  
+                                <th>Product Name & Model</th>                                                  
+                                <th>Box Details</th>
+                                <th>Serial Nos/No of Item</th>                                
+                                <th>Remarks</th>
+                                <th>Action</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                            <tr style="text-align: center;">  
+                              <td colspan="6">
+                                <button type="submit" class="btn btn-success">
+                                  Submit
+                                </button>
+                              </td>
+                            </tr>
+                          </tbody>
+                      </table>     
+                    </div>                   
+                  </div><!--RowEND -->
+              </div>                                        
+              </div>            
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+      <!-- ROW END-->
+      <!-- Page end  -->
+      
+    </div>
+  </div>
+</div>
+
+
+  <script>
+    let s = 0;    
+    function addProductDetails(){      
+      var boxdet ='';   
+      var myImage='';  
+      var mydata = ''; 
+      s=s+1;
+      protype = $("#producttype option:selected").text().search("Non-Consumable");
+      producttype = $("#producttype option:selected").text().split(':-:');      
+      productmodel = $("#modelname  option:selected").text();            
+      var proremark  =  $('#proremark').val();       
+      var totalSn = $('#totalSn').text(); 
+      var itemcount = $("#noofitem").val(); 
+      var tonerName = $('#tonerName').val();
+      var boxdetails = document.getElementById("boxdetails").files[0];
+      var form_data = new FormData()
+      form_data.append('boxdetails',boxdetails);    
+      form_data.append('csrfmiddlewaretoken',"{{csrf_token}}");
+      // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      $.ajax({
+        url: "/storeBoxImage",  
+        method: 'POST', 
+        async: false,             
+        processData:false,
+        contentType:false,
+        mimeType:"multipart/form-data",          
+        data : form_data,  
+        success: function (data) {                                 
+          console.log(data);
+          boxdet = data;           
+          myImage = myImage + "<input id='myImage"+s+"'  type='text' name='myImage"+s+"' style='display:none;' value="+data+">";         
+          // imgg = "<img id='imgg' src="+data+" width='500' height='500'>";                                                                           
+          // $("#imageHolder").html(imgg);
+        },
+      });                                               
+      productcat = $("#producttype option:selected").text().search("PRINTER");    
+      for(let i=1;i<=totalSn;i++){
+        a = "serno"+i;
+        prosrno = $("#"+a).val();              
+        mydata=mydata + "<input id='mydata"+s+i+"'  type='text' name='proserno"+s+"' style='display:none;' value="+prosrno+">";       
+      }       
+      if (protype == -1){        
+        //ser = "<td><span>"+itemcount+"</span><input type='hidden'  name='pro_count' value='"+itemcount+"'><input type='hidden' name='producttype' value='CONS'></td>";       
+        ser = "<td><button type='button' class='btn mb-1 bg-info-light' data-toggle='modal'>Items<span class='badge badge-primary ml-2'>"+itemcount+"</span></button><input type='hidden' name='product_type' value='CONS'><input type='hidden' name='no_of_item' value='"+itemcount+"'></td>";               
+        boxdet = "<td> ---- Not Required ---- </td>";
+      }
+      else{          
+        ser = "<td><button type='button' class='btn mb-1 bg-primary-light' data-toggle='modal' data-target='#exampleModalScrollable' onclick='putTable("+totalSn+","+s+")'>Show<span class='badge badge-primary ml-2'>"+totalSn+"</span></button>"+mydata+"<input type='hidden'  name='pro_count' value='"+totalSn+"'><input type='hidden' name='product_type' value='NONCONS'><input type='hidden' name='no_of_item' value='"+totalSn+"'></td>";        
+        boxdet = "<td><button type='button' class='btn mb-1 bg-danger-light' data-toggle='modal' data-target='#ImageModalScrollable' onclick='putImage("+s+")'>Show</button>"+myImage+"</td>";
+      }
+
+      sno = "<td>"+s+".</td>";
+      pdt = "<td><input type='hidden' id='prodet"+s+"' value='"+productmodel+":-[ "+producttype[0]+" ]'><input name='prodet' id='prodet' type='hidden' value='"+$('#modelname').val()+"'>"+productmodel+":-[ "+producttype[0]+" ]</td>";    
+      rem = "<td><input name='proRem' type='hidden' value='"+proremark+"'>"+proremark+"</td>";
+      del = "<td><input class='mt-2 btn btn-danger' type='button' onClick=$(this).closest('tr').remove() value='Delete'></td>";
+
+      if (productcat == -1) {         
+        newRow = "<tr>"+sno+pdt+boxdet+ser+rem+del+"<input type='hidden' name='tonarName' value='NOT_A_PRINTER'></tr>";        
+      } else {        
+        newRow = "<tr>"+sno+pdt+boxdet+ser+rem+del+"<input type='hidden' name='tonarName' value='"+tonerName+"'></tr>";                     
+      }      
+      //$('#productData tr:last').after(newRow);    
+      $('#productData tr:last').eq(-1).before(newRow);     
+      $('#exampleModalScrollableTitle').text($('#prodet'+s).val());         
+      $('#totalSn').text('0');
+      $("#takesr tr").remove();  
+
+    }
+    function putImage(rn){   
+      p = $('#prodet'+rn).val().split(':-[');    
+      price ="<span style='color: #1a7021;'>===== PRICE DETAILS =====</span><br>"+p[0];                    
+      $('#ImageModalScrollableTitle').html(price);
+      mi = $("#myImage"+rn).val();                 
+      $("#my_image").attr("src",mi);
+    }
+    function putTable(totalSn,rn){ 
+      $("#takesr tr").remove(); 
+      tabdata = [];      
+      newhead = '<tr><th>S.No.</th><th>Product Serial Number</th></tr>';
+      newrow = '';     
+      for(let i=1;i<=totalSn;i++){
+        a = "mydata"+rn+i;
+        prosrno = $("#"+a).val();                        
+        newrow = newrow + "<tr><td>"+i+"</td><td>"+prosrno+"</td></tr>";
+      }      
+      tabdata.push(newhead + newrow); 
+      srndet ="<span style='color: #1a7021;'>===== PRODUCT SERIAL NUMBER =====</span><br>"+$('#prodet'+rn).val();                    
+      $('#exampleModalScrollableTitle').html(srndet);
+      // $('#exampleModalScrollableTitle').text($('#prodet'+rn).val());
+      $("#takesr").html(tabdata);
+      
+    }
+    function getSerialNumber(){
+      // srnumber = $("#srnumber").val().replace(/C:\\fakepath\\/i, '');    
+      var srnumber = document.getElementById("srnumber").files[0];
+      producttype = $("#producttype option:selected").text().split(':-:');      
+      productmodel = $("#modelname  option:selected").text();
+      
+      var form_data = new FormData()
+      form_data.append('srnumber',srnumber);    
+      form_data.append('csrfmiddlewaretoken',"{{csrf_token}}");
+      // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      $.ajax({
+        url: "/getSerialNumber",  
+        method: 'POST',              
+        processData:false,
+        contentType:false,
+        mimeType:"multipart/form-data",          
+        data : form_data,          
+        success: function (data) {                       
+          $("#takesr").html(data); 
+          totalSn = $("#takesr tr").length -1;
+          $("#totalSn").html(totalSn);   
+          srndet ="<span style='color: #1a7021;'>===== PRODUCT SERIAL NUMBER =====</span><br>"+productmodel+":-[ "+producttype[0]+" ]";                    
+          $('#exampleModalScrollableTitle').html(srndet);                  
+        },
+      });     
+      //if($('#showSr:visible').length == 0){                
+      //  document.getElementById("showSr").style.display = "block";
+      //} else {        
+      //  document.getElementById("showSr").style.display = "none";        
+      //}     
+      
+    }
+    function checkProductType() {                  
+      procat = $("#producttype").val();
+      $.ajax({
+        type: "GET",
+        url: "/productCompanyFilter",
+        data: {
+          procat: procat,
+        },
+        success: function (data) {
+          $("#modelname").html(data);
+          $("#modelname").selectpicker("refresh");
+        },
+      });
+      
+      productcat = $("#producttype option:selected").text().search("PRINTER");
+
+      if (productcat == -1) {        
+        document.getElementById("toner").style.display = "none";
+      } else {        
+        document.getElementById("toner").style.display = "block";
+      }
+      protype = $("#producttype option:selected")
+        .text()
+        .search("Non-Consumable");
+        
+      if (protype == -1){        
+        document.getElementById("noofitembox").style.display = "block";
+
+        document.getElementById("uploadsrnobox").style.display = "none";
+        document.getElementById("srnobox").style.display = "none";
+        document.getElementById("boximage").style.display = "none";
+        
+        
+      }
+      else{
+
+        document.getElementById("uploadsrnobox").style.display = "block";
+        document.getElementById("srnobox").style.display = "block";
+        document.getElementById("boximage").style.display = "block";
+      
+        document.getElementById("noofitembox").style.display = "none";                
+      }
+      
+    }
+    function changeMe() {
+      $("#producttype").attr("disabled", false);
+      $("#producttype").selectpicker("refresh");
+      $("#modelname").attr("disabled", false);
+      $("#modelname").selectpicker("refresh");
+      $("#qunval").attr("disabled", false);
+    }
+    function changeActive(){      
+      if ($("#myTab-1").hasClass("nav-link active"))
+        $("#home-tab").click()     
+      else
+        $("#profile-tab").click()        
+      }    
+  </script>
+  {% endblock %}
+</div>

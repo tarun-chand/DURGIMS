@@ -1,0 +1,202 @@
+{%if flag == 'showdesig'%} {%if list_of_sec|length == 0 %}
+<tr>
+  <td colspan="3">
+    <h4 style="color: red">
+      No Designation Is Mapped With Selected Court/Section.
+    </h4>
+  </td>
+</tr>
+{%else%} {%for sdm in list_of_sec %}
+<tr>
+  <td>{{forloop.counter}}</td>
+  <td>{{sdm.section.section_name}}</td>
+  <td>{{sdm.staff.staff_des_name}}</td>
+  <td>{{sdm.ip_address}}</td>
+</tr>
+{%endfor%} {%endif%}
+
+{%elif flag == 'ipadd'%} {%if list_of_sec|length == 0 %}
+<tr>
+  <td colspan="3">
+    <h4 style="color: red">
+      No Designation Is Mapped With Selected Court/Section.
+    </h4>
+  </td>
+</tr>
+{%else%} {%for sdu in list_of_secdesuser %}
+{%if sdu.6 != 'T' %}
+<tr>
+  <td>{{forloop.counter}} <input type="hidden" name="sdmid" value="{{sdu.0}}" /></td>
+  <td>{{sdu.4}}</td>
+  <td>{{sdu.3}} </td>
+  <td>  
+    <div class="col-md-12">
+      <div class="form-group">
+        <select data-container="body" name="desid" id="desid"  class="form-control" data-style="py-0" data-live-search="true" style="display:block">
+          <option selected="true" value="{{sdu.5}}" >{{sdu.1}}</option>
+          <option  disabled="disabled">-- Select --</option>
+          {%for dlist in list_of_desig %}
+            <option value="{{dlist.staff_id}}">{{dlist.staff_des_name}}</option>
+          {%endfor%}
+        </select>
+      </div>
+    </div>
+  </td>  
+  <td>
+    <div class="col-md-12" >  
+      <div class="form-group">                              
+        <input type="text" name="ipaddress" id="ipaddress" class="form-control" value="{{sdu.2}}">
+      </div>
+    </div>
+  </td>
+</tr>
+{%endif%}
+{%endfor%} 
+{%endif%}
+
+{%elif flag == 'sac'%}
+<option selected="true" disabled="disabled">-- Select --</option>
+{%for sdlist in list_of_sec %}
+<option value="{{sdlist.sdm_id}}">{{sdlist.staff.staff_des_name}}</option>
+{%endfor%} {%elif flag == 'sdm'%}
+<option selected="true" disabled="disabled">-- Select --</option>
+{%for sdlist in list_of_des %}
+<option value="{{sdlist.staff_id}}">{{sdlist.staff_des_name}}</option>
+{%endfor%} {%elif flag == 'mapDesignation'%}
+<option selected="true" disabled="disabled">-- Select --</option>
+{%for sdlist in list_of_sd %}
+<option value="{{sdlist.sdm_id}}">{{sdlist.staff.staff_des_name}}</option>
+{%endfor%} {%elif flag == 'allMapDesignation'%} {%if list_of_sd|length == 0 %}
+<tr>
+  <td colspan="5">
+    <h4 style="color: red">
+      No Designation Is Mapped With Selected Court/Section. First Map the
+      Desigation Then Allocate Staff.
+    </h4>
+  </td>
+</tr>
+{%else%} {%for sd in list_of_sd %}
+<tr>
+  <td>
+    {{forloop.counter}}
+    <input type="hidden" name="sdmid" value="{{sd.0}}" />
+    <input type="hidden" name="empid" value="{{sd.4}}" />
+  </td>
+  <td>{{sd.12}}</td>
+  <td>{{sd.13}}</td>
+  <td>{{sd.3}}</td>
+  <td>
+    {%if sd.4 is none%}
+      <input type='hidden' name='action' value='CREATE'>
+    {%else%}
+      <input type='hidden' name='action' value='UPDATE'>
+     {%endif%}
+    <div class="col-md-12">
+      <div class="form-group">
+        <select
+          data-container="body"
+          name="userid"
+          id="userid{{forloop.counter}}"
+          class="selectpicker form-control"
+          data-style="py-0"
+          data-live-search="true"
+          required
+        >
+        {%if sd.4 is none%}
+          <option selected="true" disabled="disabled">-- Select --</option>
+        {%else%} 
+          <option selected="true" value="{{sd.9}}">{{sd.10}}</option>
+        {%endif%}
+          {%for urslist in list_of_staff%}
+            <option value="{{urslist.usr_id}}">{{urslist.usr_name}}</option>
+          {%endfor%}
+        </select>
+      </div>
+    </div>
+  </td>
+  <td>
+  
+    <div class="col-md-12">
+      <div class="form-group">
+        <input
+          type="date"
+          name="doj"
+          id="doj"
+          class="form-control"
+          placeholder="Date"
+          value="{{sd.5|date:'Y-m-d'}}"
+          required
+        />
+      </div>
+    </div>
+  </td>
+</tr>
+{%endfor%} {%endif%} {%elif flag == 'RemapDes'%}
+<option selected="true" disabled="disabled">-- Select --</option>
+{%for deslist in list_of_des %}
+<option value="{{deslist.0}},{{deslist.4}},{{deslist.8}}">{{deslist.13}} -- {{deslist.9}}</option>
+{%endfor%}
+
+{%elif flag == 'courtiden'%}
+<option selected="true" disabled="disabled">-- Select --</option>
+{%for ulist in list_of_staff%}
+<option value="{{ulist.0}}">{{ulist.1}}</option>
+{%endfor%}
+
+{%elif flag == 'RemapSelDes'%} {%if list_of_ed|length == 0 %}
+<tr>
+  <td colspan="6">
+    <h4 style="color: red">
+      No Staff is Mapped for this particular court/section and Designation.
+    </h4>
+  </td>
+</tr>
+{%else%} {%for ed in list_of_ed %}
+<tr>
+  <td>
+    {{forloop.counter}}
+    <input type="hidden" name="empid" value="{{ed.emp_jou_id}}" /><input
+      type="hidden"
+      name="sdmid"
+      value="{{ed.sdm_id}}"
+    />
+  </td>
+  <td>{{ed.sdm.section.section_name}}</td>
+  <td>{{ed.sdm.staff.staff_des_name}}</td>
+  <td>{{ed.usr.usr_name}}</td>
+  <td>
+    <div class="col-md-12">
+      <div class="form-group">
+        <select
+          data-container="body"
+          name="userid"
+          id="userid{{forloop.counter}}"
+          class="selectpicker form-control"
+          data-style="py-0"
+          data-live-search="true"
+          required
+        >
+          <option selected="true" disabled="disabled">-- Select --</option>
+          {%for urslist in list_of_staff%}
+          <option value="{{urslist.usr_id}}">{{urslist.usr_name}}</option>
+          {%endfor%}
+        </select>
+      </div>
+    </div>
+  </td>
+  <td>
+    <div class="col-md-10">
+      <div class="form-group">
+        <input
+          type="date"
+          name="doj"
+          id="doj"
+          class="form-control"
+          placeholder="Date"
+          required
+        />
+      </div>
+    </div>
+  </td>
+</tr>
+{%endfor%}{%endif%} {%endif%}

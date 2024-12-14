@@ -1,0 +1,351 @@
+{% extends "home.html" %}
+{% block returnDetails %} 
+
+<style>
+  .mytab.table.table-responsive tr td{
+  padding: 5px !important;
+  margin: 5px !important;
+}
+</style>
+    <div class="content-page">
+      <div class="container-fluid add-form-list">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between">
+                <div class="header-title" style="text-align: center">
+                  <h4 class="card-title">New Return</h4>
+                </div>
+              </div>
+              <div class="card-body">
+                <form action="{% url 'returnGetIssueStuff' %}" data-toggle="validator" method="post">
+                  {% csrf_token %}
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                          <label> Issued To *</label>
+                          <select name="issueto" id="issueto" class="selectpicker form-control" data-style="py-0" onchange="getUserDetails()" required>
+                              <option selected="true" disabled="disabled">--- Select ---</option>
+                              <option value="Staff">Staff</option>
+                              <option value="Judge">Judge</option>
+                          </select>
+                      </div> 
+                    </div>
+                    <div class="col-md-6" >
+                      <div class="form-group">
+                          <label>Receiver Name :-: [Designation] *</label>
+                          <div class="search_select_box">
+                              <select name="userdetail" id="userdetail" class="selectpicker form-control" data-style="py-0" data-live-search="true" required>
+                                  <option selected="true" disabled="disabled">--- Select ---</option>                          
+                              </select>
+                          </div>
+                      </div> 
+                    </div> 
+                    <div class="col-md-12">
+                      <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary mr-2"  >
+                          Get Details
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <form action="{% url 'returnDetailsSubmit' %}" data-toggle="validator" method="post">
+                  {% csrf_token %}
+                  {%if flag == 'DATA' %}
+                    <div class="row">                  
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <div class="heading-keeper">
+                            <span style="padding: 2px 10px"
+                              >List of Assetes Owned By ==></span
+                            >
+                            <h5 style="display: inline-block; margin-left: 20px;font-size: 30px;">
+                              {{user_name}}
+                            </h5>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="table-responsive rounded mb-3">
+                          <table class="data-table table mb-0 tbl-server-info">
+                            <thead class="bg-white text-uppercase">
+                              <tr class="ligth ligth-data">
+                                <th></th>
+                                <th>Issue Date</th>
+                                <th>Product Details</th>
+                                <th>Section Name<br>(Location)</th>
+                                <th>Issued<br>Quantity</th>
+                                <th>Return<br>Quantity</th>
+                                <th>Return Remarks</th>
+                                <th>Product Status</th>
+                                <th>Is Product Healthy ?</th>
+                                <th>Health Remarks</th>
+                              </tr>
+                            </thead>
+                            <tbody class="ligth-body">
+                              {% for trn in trn_det_list%}                               
+                                <tr>
+                                  <td>
+                                    
+                                    <input type="hidden" id="trn_no{{ forloop.counter }}" name="trn_no" value="{{trn.trans_id.trans_id}}" disabled>                                                                                                                             
+                                    <input type="hidden" id="pro_trn_no{{ forloop.counter }}" name="pro_trn_no" value="{{trn.pro_trans_id}}" disabled>                                                                                                                             
+                                    <div class="checkbox d-inline-block">
+                                      <input
+                                        type="checkbox"
+                                        class="checkbox-input"
+                                        id="checkbox2-{{ forloop.counter }}"
+                                        name="returnme"
+                                        style="width: 23px;height: 23px;"
+                                        onclick="checkMe(this)"
+                                      />
+                                      <label for="checkbox2" class="mb-0"></label>
+                                    </div>
+                                    
+                                  </td>
+                                  <td>{{trn.trans_id.trans_issue_date|date:"d/m/Y"}}</td>
+                                  <td>
+                                    <input type="hidden" id="product_id{{ forloop.counter }}" name="product_id" value="{{trn.product_id.product_id}}" disabled>
+                                    
+                                    <span class="text-muted">{{trn.product_id.product_cat_id.product_cat_name}} :</span>  {{trn.product_id.product_name.product_com_name}} {%if trn.product_id.product_cat_id.product_type != 'Consumable'%} - ({{trn.product_id.product_model.product_mod_name}}) <br> <span class="text-muted">Serial No : </span>{{trn.product_id.product_serialno}} {%endif%}
+                                    <!-- <table class="mytab table table-responsive">
+                                      <tr>
+                                        <td>Company Name:</td>
+                                        <td><span class="text-muted"> {{trn.product_id.product_name.product_com_name}}</span></td>
+                                      </tr>
+                                      {%if trn.product_id.product_cat_id.product_type != 'Consumable'%}
+                                        <tr>
+                                          <td>Model Name/No:</td>
+                                          <td><span class="text-muted"> {{trn.product_id.product_model.product_mod_name}}</span></td>
+                                        </tr>
+                                        <tr>
+                                          <td>Serial No :</td>
+                                          <td><span class="text-muted"> {{trn.product_id.product_serialno}}</span></td>
+                                        </tr>
+                                      {%endif%}
+                                      <tr>
+                                        <td>Product Category : </td>
+                                        <td><span class="text-muted"> {{trn.product_id.product_cat_id.product_cat_name}}</span></td>
+                                      </tr>
+                                      <tr>
+                                        <td>Product Type:</td>
+                                        <td><span class="text-muted"> {{trn.product_id.product_cat_id.product_type}}</span></td>
+                                      </tr>
+                                    </table> -->
+                                  </td>
+                                  <td>
+                                    <input type="hidden" name="usr_id" value="{{trn.usr_id.usr_id}}">
+                                    {{trn.trans_id.section_id.section_name}}
+                                    <!-- <table class="mytab table table-responsive">                                    
+                                      <tr>
+                                        <td>Section Name:</td>
+                                        <td><span class="text-muted"> {{trn.usr_id.location_id.section_id.section_name}}</span></td>
+                                      </tr>
+                                      <tr>
+                                        <td>Building Name:</td>
+                                        <td><span class="text-muted"> {{trn.usr_id.location_id.section_id.building_name.building_name}}</span></td>
+                                      </tr>
+                                      <tr>
+                                        <td>Floor:</td>
+                                        <td><span class="text-muted"> {{trn.usr_id.location_id.floor}}</span></td>
+                                      </tr>
+                                      <tr>
+                                        <td>Room No: </td>
+                                        <td><span class="text-muted">{{trn.usr_id.location_id.roomno}}</span></td>
+                                      </tr>
+                                      <tr>
+                                        <td>Landmark:</td>
+                                        <td><span class="text-muted"> {{trn.usr_id.location_id.landmark}}</span></td>
+                                      </tr>
+                                    </table> -->
+                                  </td>
+                                  <td>                                    
+                                    <div class="form-group"><input type="text" value="{{trn.no_of_item_issue}}"  name="Iquantity" id="Iquantity" class="form-control iqun" size="4"  readonly></div>
+                                  </td>
+                                  <td>
+                                    <div class="form-group"><input type="text" name="Rquantity" id="Rquantity{{ forloop.counter }}" class="form-control rqun" value="{%if  trn.no_of_item_issue == 1 %} {{trn.no_of_item_issue}} {%endif%}" placeholder="No of Returning Item" size="4" disabled ></div>
+                                  </td>   
+                                  <td>
+                                    <div class="form-group">
+                                      <textarea
+                                      name = "returnRemark"
+                                      class="form-control"
+                                      id="returnRemark{{ forloop.counter }}"
+                                      rows="1"
+                                      disabled
+                                    ></textarea>
+                                  </div>
+                                  </td> 
+                                  <td>
+                                    <div class="form-group">
+                                      <select
+                                      name="productstatus"
+                                      id="productstatus{{ forloop.counter }}"
+                                      class="selectpicker form-control"
+                                      data-style="py-0" 
+                                      disabled >
+                                      <option selected="true"  value="">
+                                            --- Select ---
+                                      </option>
+                                      <option value="Working">Working</option>
+                                      <option value="Not Working">Not Working</option>
+                                      </select>
+                                      </div>
+                                  </td>                                                                
+                                  <td>
+                                    <div class="form-group">
+                                      <select
+                                      id="producthealth{{ forloop.counter }}"
+                                      name="producthealth"
+                                      class="selectpicker form-control"
+                                      data-style="py-0" 
+                                      disabled >
+                                      <option selected="true" value="">
+                                            --- Select ---
+                                      </option>
+                                      <option value="Yes">YES</option>
+                                      <option value="No">NO</option>
+                                      </select>
+                                      </div>
+
+                                  </td>                                  
+                                  
+                                  <td>
+                                    <div class="form-group">
+                                    <textarea
+                                    name = "healthRemark"
+                                    class="form-control"
+                                    id="healthRemark{{ forloop.counter }}"
+                                    rows="1"
+                                    disabled
+                                    ></textarea>
+                                </div>
+                                </td>
+                                </tr>
+                              {%endfor%}
+                              
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Return Date *</label>
+                          <input type="date" name="returnDate" id="ret_date" class="form-control" required>
+                  </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                                <label>Generate Receipt......?*</label>
+                                <div class="form-group">
+                                  <select
+                                  name="receiving"
+                                  id="receiving"
+                                  class="selectpicker form-control"
+                                  data-style="py-0" onchange="changeButton()" required
+                                  >
+                                  <option selected="true" value="">
+                                        --- Select ---
+                                  </option>
+                                  <option value="Yes">YES</option>
+                                  <option value="No">NO</option>
+                                  </select>
+                                  </div>                                    
+                        </div>
+                    </div>
+                      
+                      <div class="col-md-12">
+                        <div class="form-group text-center">
+                          <button id="subButton" type="submit" class="btn btn-primary mr-2" onclick="doChanges()">
+                            Submit
+                          </button>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  {%endif%}
+                </form>
+                <!--END OF TABLE row-->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ROW END-->
+        <!-- Page end  -->
+      </div>
+    </div>
+    <script>
+      document.getElementById("ret_date").valueAsDate = new Date();
+      function checkMe(e) {      
+        cb = (e.getAttribute( 'id' )).split('-')[1];        
+        if(e.checked){
+          $("#trn_no"+cb).prop('disabled', false);
+          $("#pro_trn_no"+cb).prop('disabled', false);
+          $("#product_id"+cb).prop('disabled', false);
+          
+          $("#Rquantity"+cb).prop('disabled', false);
+          $("#returnRemark"+cb).prop('disabled', false);
+          $("#productstatus"+cb).attr('disabled', false);
+          $("#productstatus"+cb).selectpicker('refresh');
+          $("#producthealth"+cb).attr('disabled', false);
+          $("#producthealth"+cb).selectpicker('refresh');
+          $("#healthRemark"+cb).prop('disabled', false);
+        }          
+        else{
+          $("#trn_no"+cb).prop('disabled', true);
+          $("#pro_trn_no"+cb).prop('disabled', true);
+          $("#product_id"+cb).prop('disabled', true);
+          $("#Rquantity"+cb).prop('disabled', true);
+          $("#returnRemark"+cb).prop('disabled', true);
+          $("#productstatus"+cb).attr('disabled', true);
+          $("#productstatus"+cb).selectpicker('refresh');
+          $("#producthealth"+cb).attr('disabled', true);
+          $("#producthealth"+cb).selectpicker('refresh');
+          $("#healthRemark"+cb).prop('disabled', true);          
+        }                    
+      }
+
+      function changeButton(){              
+            let r1 = $('#receiving option:selected').val();
+            // let r1 = $("input[name='receiving']:checked").val();      
+            if(r1 === "Yes")
+                $('#subButton').html('Submit and Print');        
+            else
+                $('#subButton').html('Submit');             
+       }
+      
+      function getUserDetails(){
+                issueto=$('#issueto').val();
+                $.ajax({
+                    type:"GET",
+                    url: "/issueUserDetailsFilter",
+                    data:{
+                        issueto: issueto
+                    },
+                    success: function(data) 
+                    {                   
+                        $('#userdetail').html(data);
+                        $('#userdetail').selectpicker('refresh');
+                    }
+                })
+            }
+      function getIssueStuff(){
+        userdetail =$('#userdetail').val();
+        $.ajax({
+                    type:"GET",
+                    url: "/returngetIssueStuff",
+                    data:{
+                      userdetail: userdetail
+                    },
+                    success: function(data) 
+                    {                   
+                        $('#userdetail').html(data);
+                        $('#userdetail').selectpicker('refresh');
+                    }
+                })
+      }  
+      </script>
+    {% endblock %}
+
+
+

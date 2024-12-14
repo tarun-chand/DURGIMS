@@ -1,0 +1,171 @@
+{% extends "home.html" %} {% block userDesignation %}
+<form
+  action="{% url 'shiftAssetChargeSubmit' %}"
+  data-toggle="validator"
+  method="post"
+>
+  {% csrf_token %}
+<div class="content-page">
+  <div class="container-fluid add-form-list">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+            <div class="header-title" style="text-align: center">
+              <h4 class="card-title">
+                Shift Asset Charge To Other Designation
+              </h4>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Court/Section*</label>
+                  <div class="search_select_box">
+                    <select
+                      name="sectionid"
+                      id="sectionid"
+                      class="selectpicker form-control"
+                      data-style="py-0"
+                      data-live-search="true"
+                      onchange="showAllDesignation()"
+                      
+                    >
+                      <option selected="true" disabled="disabled">
+                        -- Select --
+                      </option>
+                      {%for pdlist in list_all_sc%}
+                      <!-- <option value="{{pdlist.product_cat_id.product_cat_id}}">{{pdlist.product_cat_id.product_cat_name}} :-: [ {{pdlist.product_cat_id.product_type}} ]</option>    -->
+                      <option value="{{pdlist.section_id}}">
+                        {{pdlist.section_name}}
+                      </option>
+                      {%endfor%}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Shift Asset Charge From *</label>
+                  <div class="search_select_box">
+                    <select
+                      name="sacfrom"
+                      id="sacfrom"
+                      class="selectpicker form-control"
+                      data-style="py-0"
+                      data-live-search="true" 
+                      onchange="filterDesignation()"                     
+                    >
+                      <option selected="true" disabled="disabled">
+                        -- Select --
+                      </option>                      
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Shift Asset Charge To *</label>
+                  <div class="search_select_box">
+                    <select
+                      name="sacto"
+                      id="sacto"
+                      class="selectpicker form-control"
+                      data-style="py-0"
+                      data-live-search="true"                      
+                    >
+                      <option selected="true" disabled="disabled">
+                        -- Select --
+                      </option>                      
+                    </select>
+                  </div>
+                </div>
+              </div>
+                          
+            </div>            
+            {% comment %} <div class="col-md-12 text-center">              
+                <table class="table" style="width:100%" id="datakeeper">  
+                  <thead>
+                    <tr class="ligth">
+                        <th scope="col">Serial No</th>
+                        <th scope="col">Section</th>
+                        <th scope="col">Designation</th>        
+                        <th scope="col">IP Address</th>        
+                    </tr>
+                  </thead>   
+                  <tbody>                    
+                  </tbody>             
+                </table>
+                <p>{{msg}}</p>
+            </div> {% endcomment %}
+
+            <div class="col-md-12">
+                  <div class="form-group text-center">
+                    <button
+                      type="submit"
+                      id="subButton"
+                      class="mt-2 btn btn-success"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+ <script>  
+
+ function showAllDesignation(){
+    sectionid = $("#sectionid").val();
+    $.ajax({
+      type: "GET",
+      url: "/showAllDesignation",
+      data: {
+        sectionid: sectionid,
+        source:'SAC',
+      },
+      success: function (data) {      
+         $("#sacfrom").html(data);        
+        $("#sacfrom").selectpicker("refresh");
+      },      
+    });
+  }
+
+  function filterDesignation(){
+    opt = '';
+    sfrom = $("#sacfrom option:selected").text();
+    $("#sacfrom option").each(function()
+    {      
+      opt = opt+"<option value="+$(this).val()+">"+$(this).text()+"</option>"
+    });
+    $("#sacto").html(opt);        
+    $("#sacto option[value='"+$("#sacfrom").val()+"']").remove();
+    $("#sacto").selectpicker("refresh");
+  }
+
+  function getAllDesignation(){
+    sectionid = $("#sectionid").val();
+    $.ajax({
+      type: "GET",
+      url: "/getAllDesignationOfSection",
+      data: {
+        sectionid: sectionid,
+      },
+      success: function (data) {   
+        $("#desig").html(data);        
+        $("#desig").selectpicker("refresh");
+      },      
+    });
+  }
+  
+ </script>
+ {% endblock %}
+</div>

@@ -1,0 +1,276 @@
+{% extends "home.html" %}
+{% block sectionDetails %}
+<div class="content-page">
+    <div class="container-fluid add-form-list">
+      <div class="row">
+        {%if flag == 'UPDATE'%}
+          <div class="col-sm-3">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between">
+                <div class="header-title" style="text-align: center">
+                  <h4 class="card-title"><span class="text-danger mt-2">Update</span> Section Details</h4>
+                </div>
+              </div>
+              <div class="card-body">
+                <form action="{% url 'sectionDetailsUpdate' %}" data-toggle="validator" method="post">
+                  {% csrf_token %}
+                        <div class="row">
+                        <div class="col-md-12">
+                              {%for msg in messages%}
+                                    {% if msg.tags == "success" %}
+                                          <div class="alert alert-danger" role="alert">
+                                                <div class="iq-alert-text">
+                                                      <b>{{ msg }}</b> 
+                                                </div>
+                                          </div>
+                                    {%endif%}
+                              {%endfor%}
+                        </div>
+                              {%for scdata in scdata%}
+                              <input type="hidden" name="scid" value={{scdata.section_id}} > 
+                              <div class="col-md-12">
+                          <div class="form-group">
+                              <label>Establishment Name *</label>
+                              <div class="search_select_box">
+                                  <select name="estbname" class="selectpicker form-control" data-style="py-0" data-live-search="true">
+                                      <option selected="true" disabled="disabled">--- Select ---</option>
+                                      <option selected="true" value="{{scdata.building.est}}">{{scdata.building.est.est_name}}</option> 
+                                      {%for estlist in list_all_est%}                                        
+                                      <option value="{{estlist.est_id}}">{{estlist.est_name}}</option> 
+                                      {%endfor%}                       
+                                  </select>
+                              </div>
+                          </div> 
+                      </div>
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <label>Building Name *</label>
+                              <div class="search_select_box">
+                                  <select name="buildingname" class="selectpicker form-control" data-style="py-0" data-live-search="true">                                      
+                                      <option selected="true" value="{{scdata.building.building_id}}">{{scdata.building.building_name}}</option> 
+                                      <option  disabled="disabled">--- Select ---</option>
+                                      {%for bmlist in list_all_bm%}  
+                                      <option value="{{bmlist.building_id}}">{{bmlist.building_name}}</option> 
+                                      {%endfor%}                       
+                                  </select>
+                              </div>
+                          </div> 
+                      </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Section Type *</label>
+                          <select name="sectiontype" class="selectpicker form-control" data-style="py-0">
+                              <option selected="true" value="{{scdata.section_type}}">{{scdata.section_type}}</option> 
+                              <option  disabled="disabled">--- Select ---</option>
+                              <option value="Court">Court</option>
+                              <option value="Section">Section</option>
+                          </select>
+                      </div> 
+                  </div> 
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Section Name</label>
+                          <input type="text" name="sectionname" class="form-control" value="{{scdata.section_name}}"  >
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Floor *</label>
+                        <input type="text" name="floor" class="form-control" value="{{scdata.floor}}"  >
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Room No *</label>
+                        <input type="text" name="room" class="form-control" value="{{scdata.roomno}}" >
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Landmark</label>
+                        <input type="text" name="landmark" class="form-control" value="{{scdata.landmark}}"  >
+                    </div>
+                </div>
+                  {%endfor%}
+    
+                  </div>
+                  <div class="col-md-12 text-center">
+                      <div class="form-group">
+                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                      </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        {%else%}
+          <div class="col-sm-3">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between">
+                <div class="header-title" style="text-align: center">
+                  <h4 class="card-title"><span class="text-primary mt-2">New</span> Section Details</h4>
+                </div>
+              </div>
+              <div class="card-body">
+                <form action="{% url 'sectionDetailsSubmit' %}" data-toggle="validator" method="post">
+                  {% csrf_token %}
+                  <div class="row">
+                  <div class="col-md-12">
+                        {%for msg in messages%}
+                              {% if msg.tags == "info" %}
+                                    <div class="alert alert-warning" role="alert">
+                                          <div class="iq-alert-text">
+                                                <b>{{ msg }}</b> 
+                                          </div>
+                                    </div>
+                              {% elif msg.tags == "success" %}
+                              <div class="alert alert-success" role="alert">
+                                    <div class="iq-alert-text">
+                                          <b>{{ msg }}</b> 
+                                    </div>
+                              </div>
+                              {%endif%}
+                        {%endfor%}
+                         <div class="form-group">
+                              <label>Establishment Name *</label>
+                              <div class="search_select_box">
+                                  <select name="estbname" id="estbname" class="selectpicker form-control" data-style="py-0" data-live-search="true" onchange="checkBuilding()">                                      
+                                      <option selected="true" disabled="disabled">--- Select ---</option>
+                                      {%for estlist in list_all_est%}  
+                                      <option value="{{estlist.est_id}}">{{estlist.est_name}}</option> 
+                                      {%endfor%}                       
+                                  </select>
+                              </div>
+                          </div> 
+                          <div class="form-group">
+                              <label>Building Name *</label>
+                              <div class="search_select_box">
+                                  <select name="buildingname" id="buildingname" class="selectpicker form-control" data-style="py-0" data-live-search="true">
+                                      <option selected="true" disabled="disabled">-- Building Name --</option>                       
+                                  </select>
+                              </div>
+                          </div> 
+                      </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Section Type *</label>
+                          <select name="sectiontype" class="selectpicker form-control" data-style="py-0">
+                              <option selected="true" disabled="disabled">--- Select ---</option>
+                              <option value="Court">Court</option>
+                              <option value="Section">Section</option>
+                          </select>
+                      </div> 
+                  </div> 
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Section Name</label>
+                          <input type="text" name="sectionname" class="form-control" placeholder="Product Category Name"  >
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Floor *</label>
+                        <input type="text" name="floor" class="form-control" value="{{locdata.floor}}"  >
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Room No *</label>
+                        <input type="text" name="room" class="form-control" value="{{locdata.roomno}}" >
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Landmark</label>
+                        <input type="text" name="landmark" class="form-control" value="{{locdata.landmark}}"  >
+                    </div>
+                </div>
+    
+                  </div>
+                  <div class="col-md-12 text-center">
+                      <div class="form-group">
+                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                      </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        {%endif%}
+  
+        <div class="col-sm-9">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                  <div class="header-title" style="text-align: center">
+                    <h4 class="card-title">All Section Details</h4>
+                  </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                          <div class="col-lg-12">
+                                <div class="table-responsive rounded mb-3" style="overflow-y: scroll;height: 338px;">
+                                      <table class="data-table table mb-0 tbl-server-info">
+                                      <thead class="bg-white text-uppercase">
+                                            <tr class="ligth ligth-data">
+                                                  <th>Establishment Name</th>
+                                                  <th>Building Name</th>
+                                                  <th>Section Type</th>
+                                                  <th>Section Name</th>
+                                                  <th>Floor</th>
+                                                  <th>Room No</th>
+                                                  <th>Landmark</th>
+                                                  <th>Action</th>
+                                            </tr>
+                                      </thead>
+                                      <tbody class="ligth-body">
+                                        {%for sclist in list_all_sc%} 
+                                            <tr>
+                                                  <td>{{sclist.building.est.est_name}}</td>
+                                                  <td>{{sclist.building.building_name}}</td>
+                                                  <td>{{sclist.section_type}}</td> 
+                                                  <td>{{sclist.section_name}}</td> 
+                                                  <td>{{sclist.floor}}</td>                                  
+                                                  <td>{{sclist.roomno}}</td>                                  
+                                                  <td>{{sclist.landmark}}</td>                                  
+                                                  <td>
+                                                  <div class="d-flex align-items-center list-action">
+                                                        
+                                                        <a class="badge bg-success mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"
+                                                        href=" {% url 'sectionDetailsUpdateRedirect'%}?scid={{sclist.section_id}}">Edit</a>
+                                                        
+                                                  </div>
+                                                  </td>
+                                            </tr>
+                                        {%endfor%}
+                                      </tbody>
+                                      </table>
+                                </div>
+                            </div>
+                      
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+      <!-- ROW END-->
+      <!-- Page end  -->
+    </div>
+  </div>
+  <script>
+    function checkBuilding(){      
+        procat = $('#estbname').val();        
+        $.ajax({
+          type:"GET",
+          url: "/buildingFilter",
+          data:{
+            procat: procat
+          },
+          success: function(data) 
+          {            
+            $('#buildingname').html(data);
+            $('#buildingname').selectpicker('refresh');
+          }
+        })               
+    }
+  </script>
+{% endblock %}

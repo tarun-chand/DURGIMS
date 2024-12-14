@@ -1,0 +1,177 @@
+{% extends "home.html" %}
+{% block BuildingDetails %}
+<div class="content-page">
+    <div class="container-fluid add-form-list">
+      <div class="row">
+            {%if flag == 'UPDATE'%}
+                  <div class="col-sm-3">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                      <div class="header-title" style="text-align: center">
+                        <h4 class="card-title"><span class="text-danger mt-2">Update</span> Building Details</h4>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <form action="{% url 'buildingDetailsUpdate' %}" data-toggle="validator" method="post">
+                        {% csrf_token %}
+                              <div class="row">
+                              <div class="col-md-12">
+                                    {%for msg in messages%}
+                                          {% if msg.tags == "success" %}
+                                                <div class="alert alert-danger" role="alert">
+                                                      <div class="iq-alert-text">
+                                                            <b>{{ msg }}</b> 
+                                                      </div>
+                                                </div>
+                                          {%endif%}
+                                    {%endfor%}
+                              </div>
+                                    {%for bmdata in bmdata%}
+                                          <input type="hidden" name="bmid" value={{bmdata.building_id}} > 
+                                          <div class="col-md-12">
+                                          <div class="form-group">
+                                                <label>Establishment Name *</label>
+                                                <select
+                                                name="est_id"
+                                                class="selectpicker form-control"
+                                                data-style="py-0"
+                                                >
+                                                <option selected="true" value="{{bmdata.est.est_id}}">{{bmdata.est.est_name}}</option>
+                                                <option  disabled="disabled">
+                                                      --- Select ---
+                                                </option>
+                                                {%for est in list_all_est%}
+                                                <option value="{{est.est_id}}">{{est.est_name}}</option>
+                                                {%endfor%}
+                                                </select>
+                                                </div>      
+                                                </div>            
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Building Name</label>
+                                <input type="text" name="buildingname" class="form-control" value="{{bmdata.building_name}}" >
+                            </div>
+                        </div>
+                        {%endfor%}
+          
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <div class="form-group">
+                                  <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  </div>
+            {%else%}
+                  <div class="col-sm-3">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                      <div class="header-title" style="text-align: center">
+                        <h4 class="card-title"><span class="text-primary mt-2">New</span> Building Details</h4>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <form action="{% url 'buildingDetailsSubmit' %}" data-toggle="validator" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                        <div class="col-md-12">
+                              {%for msg in messages%}
+                                    {% if msg.tags == "info" %}
+                                          <div class="alert alert-warning" role="alert">
+                                                <div class="iq-alert-text">
+                                                      <b>{{ msg }}</b> 
+                                                </div>
+                                          </div>
+                                    {% elif msg.tags == "success" %}
+                                    <div class="alert alert-success" role="alert">
+                                          <div class="iq-alert-text">
+                                                <b>{{ msg }}</b> 
+                                          </div>
+                                    </div>
+                                    {%endif%}
+                              {%endfor%}
+                              <div class="form-group">
+                                    <label>Establishment Name *</label>
+                                    <select
+                                    name="est_id"
+                                    class="selectpicker form-control"
+                                    data-style="py-0"
+                                    >
+                                    <option selected="true" disabled="disabled">
+                                          --- Select ---
+                                    </option>
+                                    {%for est in list_all_est%}
+                                    <option value="{{est.est_id}}">{{est.est_name}}</option>
+                                    {%endfor%}
+                                    </select>
+                                    </div>
+                            <div class="form-group">
+                                <label>Building Name *</label>
+                                <input type="text" name="buildingname" class="form-control" placeholder="Building Name"  >
+                            </div>
+                        </div>
+          
+          
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <div class="form-group">
+                                  <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  </div>
+            {%endif%}
+        
+  
+        <div class="col-sm-9">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                  <div class="header-title" style="text-align: center">
+                    <h4 class="card-title">All Building Details</h4>
+                  </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                          <div class="col-lg-12">
+                                <div class="table-responsive rounded mb-3" style="overflow-y: scroll;height: 400px;">
+                                      <table class="data-table table mb-0 tbl-server-info">
+                                      <thead class="bg-white text-uppercase">
+                                            <tr class="ligth ligth-data">                                        
+                                                  <th>Establishment Name</th>
+                                                  <th>Building Name</th>
+                                                  <th>Action</th>
+                                            </tr>
+                                      </thead>
+                                      <tbody class="ligth-body">
+                                          {%for bmlist in list_all_bm%}
+                                            <tr>                                                
+                                                  <td>{{bmlist.est.est_name}}</td>                                    
+                                                  <td>{{bmlist.building_name}}</td>                                    
+                                                  <td>
+                                                  <div class="d-flex align-items-center list-action">
+                                                        
+                                                        <a class="badge bg-success mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"
+                                                        href=" {% url 'buildingDetailsUpdateRedirect'%}?bmid={{bmlist.building_id}}">Edit</a>
+                                                  </div>
+                                                  </td>
+                                            </tr>
+                                            {%endfor%}
+                                      </tbody>
+                                      </table>
+                                </div>
+                            </div>
+                      
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+      <!-- ROW END-->
+      <!-- Page end  -->
+    </div>
+  </div>
+{% endblock %}

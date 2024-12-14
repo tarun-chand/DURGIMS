@@ -1,0 +1,188 @@
+{% extends "home.html" %} {% block userDesignation %}
+<form
+  action="{% url 'ReDEMSubmit' %}"
+  data-toggle="validator"
+  method="post"
+>
+  {% csrf_token %}
+<div class="content-page">
+  <div class="container-fluid add-form-list">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+            <div class="header-title" style="text-align: center">
+              <h4 class="card-title">
+                Remapping Of Employee To Designation <br><br> (In Case of Transfer)
+              </h4>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12" style="text-align: center;">
+                <div class="custom-control custom-radio custom-radio-color-checked custom-control-inline">
+                  <input type="radio" id="diffcourt" name="option" value="diffcourt" class="custom-control-input bg-danger" onclick="resetAll()">
+                  <label class="custom-control-label" for="diffcourt"> Transfer in Different Court/Establishment</label>
+                </div>
+                <div class="custom-control custom-radio custom-radio-color-checked custom-control-inline">
+                  <input type="radio" id="samecourt" name="option" value="samecourt" class="custom-control-input bg-warning" onclick="resetAll()">
+                  <label class="custom-control-label" for="samecourt"> Transfer Within the Court</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Date Of Posting/Transfer</label>
+                  <input
+                    type="date"
+                    name="doj"
+                    id="doj"
+                    class="form-control"
+                    placeholder="Date"
+                    required
+                  />
+                </div>
+              </div> 
+              <div class="col-md-6">                
+                <div class="form-group">
+                  <label>Court/Section*</label>
+                  <select
+                      name="secdes"
+                      id="secdes"
+                      class="selectpicker form-control"
+                      data-style="py-0"
+                      data-live-search="true"
+                      onchange="getAllDesignationRemap()"
+                    >
+                      <option selected="true" disabled="disabled">
+                        -- Select --
+                      </option>
+                      {%for sdlist in list_of_sd%}
+                      <!-- <option value="{{pdlist.product_cat_id.product_cat_id}}">{{pdlist.product_cat_id.product_cat_name}} :-: [ {{pdlist.product_cat_id.product_type}} ]</option>    -->
+                      <option value="{{sdlist.section_id}}">
+                        {{sdlist.section_name}}
+                      </option>
+                      {%endfor%}
+                    </select>
+                </div>
+              </div> 
+              <div class="col-md-6">                
+                <div class="form-group">
+                  <label>Designation - Current Employee</label>
+                  <select
+                      name="seuid"
+                      id="seuid"
+                      class="selectpicker form-control"
+                      data-style="py-0"
+                      data-live-search="true"
+                      onchange="getCourtWiseUSer()"
+                      
+                    >
+                      <option selected="true" disabled="disabled">
+                        -- Select --
+                      </option>                      
+                    </select>
+                </div>
+              </div>   
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Designation - New Employee</label>
+                  <select
+                    data-container="body"
+                    name="userid"
+                    id="userid"
+                    class="selectpicker form-control"
+                    data-style="py-0"
+                    data-live-search="true"
+                    required
+                  >
+                    <option selected="true" disabled="disabled">-- Select --</option>                                        
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group text-center">
+                  <button
+                    type="submit"
+                    id="subButton"
+                    class="mt-2 btn btn-success"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>                                            
+            </div>                                    
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ <script>     
+  function resetAll(){       
+    $('#secdes').prop('selectedIndex',0);
+    $('#seuid').prop('selectedIndex',0);
+    $('#userid').prop('selectedIndex',0); 
+    $("#secdes").selectpicker("refresh");   
+    $("#seuid").selectpicker("refresh");   
+    $("#userid").selectpicker("refresh");      
+  }
+  function getAllDesignationRemap(){
+    secdes = $("#secdes").val();        
+    $.ajax({
+      type: "GET",
+      url: "/getAllDesignationRemap",
+      data: {
+        secdes: secdes,
+      },
+      success: function (data) {        
+        $("#seuid").html(data);         
+        $("#seuid").selectpicker("refresh");       
+      },
+    });    
+  }
+  function getCourtWiseUSer(){
+    secdes = $("#secdes").val();
+    courtiden = $('input[name="option"]:checked').val();     
+    $.ajax({
+      type: "GET",
+      url: "/getCourtWiseUSer",
+      data: {
+        secdes: secdes,
+        courtiden :courtiden,
+      },
+      success: function (data) {        
+        console.log(data);
+        $("#userid").html(data);         
+        $("#userid").selectpicker("refresh");       
+      },
+    });    
+  }
+  function getSelectedSectionDesignationRemap(){
+    secdes = $("#secdes").val();
+    desig = $("#desig").val();
+    $.ajax({
+      type: "GET",
+      url: "/getSelectedSectionDesignationRemap",
+      data: {
+        secdes: secdes,
+        desig:desig
+      },
+      success: function (data) {
+        $("#datakeeper").find("tr:gt(0)").remove();
+        $("#datakeeper tr:last").after(data);    
+        var l = ($("#datakeeper tr").length);
+        console.log(l);        
+        for(var i=1;i<=l;i++){
+          userid = "userid"+i;
+          console.log("userid");
+          console.log(userid);
+          $("#"+userid).selectpicker("refresh");
+        }
+      // $("#userid").selectpicker("refresh");
+      },
+    });    
+  }
+ 
+ </script>
+ {% endblock %}
+</div>

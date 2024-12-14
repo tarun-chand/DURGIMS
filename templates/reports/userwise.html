@@ -1,0 +1,124 @@
+{% extends "home.html" %}
+{% block healthDetails %} 
+<div class="content-page">
+    <div class="container-fluid add-form-list">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between">
+              <div class="header-title" style="text-align: center">
+                <h4 class="card-title">Health Details</h4>
+              </div>
+            </div>
+            <div class="card-body">
+              <form action="page-list-returns.html" data-toggle="validator">
+                <div class="row">                                                          
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Product *</label>
+                            <div class="search_select_box">
+                                <select name="producttype" class="selectpicker form-control" data-style="py-0" data-live-search="true">
+                                    <option selected="true" disabled="disabled">--- Select ---</option>                          
+                                </select>
+                            </div>
+                        </div> 
+                    </div>                                                                                                                
+                </div>
+                <div class="col-md-12 text-center">
+                    <div class="form-group">
+                          <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-sm-12">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                  <div class="header-title" style="text-align: center">
+                    <h4 class="card-title">All Health Details</h4>
+                  </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                          <div class="col-lg-12">
+                                <div class="table-responsive rounded mb-3" style="overflow-y: scroll;height: 490px;">
+                                      <table class="data-table table mb-0 tbl-server-info">
+                                      <thead class="bg-white text-uppercase">
+                                            <tr class="ligth ligth-data">
+                                            
+                                                  <th>Product Details</th>
+                                                  <th>Location Details</th>
+                                                  <th>Is Product Healthy ?</th>
+                                                  <th>Product Status</th>
+                                                  <th>Health Remarks</th>
+                                                  <th>Action</th>
+                                            </tr>
+                                      </thead>
+                                      <tbody class="ligth-body">
+                                            <tr>
+                                                  
+                                                  <td>01 jan 2020</td>
+                                                  <td>Bill Yerds</td> 
+                                                  <td>01 jan 2020</td>   
+                                                  <td>01 jan 2020</td> 
+                                                  <td>01 jan 2020</td>                                 
+                                                  <td>
+                                                  <div class="d-flex align-items-center list-action">
+                                                        
+                                                        <a class="badge bg-success mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"
+                                                              href="#"><i class="ri-pencil-line mr-0"></i></a>
+                                                        
+                                                  </div>
+                                                  </td>
+                                            </tr>
+                                            <tr>
+                                                <td>01 jan 2020</td>
+                                                  <td>03 jan 2020</td>
+                                                  <td>Anna Sthesia</td>
+                                                  <td>01 jan 2020</td> 
+                                                  <td>01 jan 2020</td> 
+                                                  <td>
+                                                  <div class="d-flex align-items-center list-action">
+                                                        
+                                                        <a class="badge bg-success mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"
+                                                              href="#"><i class="ri-pencil-line mr-0"></i></a>
+                                                        
+                                                  </div>
+                                                  </td>
+                                            </tr>
+                                            <tr>
+                                                <td>01 jan 2020</td>
+                                                  <td>05 jan 2020</td>
+                                                  <td>Paul Molive</td>
+                                                  <td>01 jan 2020</td> 
+                                                  <td>01 jan 2020</td> 
+                                                  <td>
+                                                  <div class="d-flex align-items-center list-action">
+                                                        
+                                                        <a class="badge bg-success mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"
+                                                              href="#"><i class="ri-pencil-line mr-0"></i></a>
+                                                        
+                                                  </div>
+                                                  </td>
+                                            </tr>
+                                           
+                                            
+                                      </tbody>
+                                      </table>
+                                </div>
+                            </div>
+                      
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+      <!-- ROW END-->
+      <!-- Page end  -->
+    </div>
+  </div>
+
+{% endblock %}

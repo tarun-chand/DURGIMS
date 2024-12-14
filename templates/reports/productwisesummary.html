@@ -1,0 +1,130 @@
+{% extends "home.html" %}
+{% block healthDetails %} 
+<div class="content-page">
+    <div class="container-fluid add-form-list">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between">
+              <div class="header-title" style="text-align: center">
+                <h4 class="card-title">Product Summary Reports</h4>
+              </div>
+            </div>
+            <div class="card-body">
+              <form action="{% url 'productWiseReportSubmit' %}" data-toggle="validator" method="post">
+              {% csrf_token %}
+                <div class="row">                                                                           
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Select Product Type *</label>
+                            <div class="search_select_box">
+                      <select
+                        name="productcat"
+                        id="productcat"
+                        class="selectpicker form-control"
+                        data-style="py-0"
+                        data-live-search="true" 
+                        onchange="getProCat()"                       
+                      >
+                        <option selected="true" disabled="disabled">
+                          -- Select Product --
+                        </option>
+                        {%for pdlist in list_of_cat%}
+                        <!-- <option value="{{pdlist.product_cat_id.product_cat_id}}">{{pdlist.product_cat_id.product_cat_name}} :-: [ {{pdlist.product_cat_id.product_type}} ]</option>    -->
+                        <option value="{{pdlist.product_cat_id}}">
+                          {{pdlist.product_cat_name}}
+                        </option>
+                        {%endfor%}
+                      </select>
+                    </div>
+                        </div> 
+                    </div>    
+                    <input type="hidden" name="procatname" id="procatname">                  
+                    <div class="col-md-2">     
+                      <label></label><br>                                            
+                      <button type="submit" class="btn btn-primary mt-2"  >Get Report</button>                       
+                  </div>                                                                                                             
+                </div>                
+              </form>
+            </div>
+            <div class="col-lg-12" id='showMe'>
+            <table class="table mb-0 tbl-server-info">
+              <thead>
+              <tr style="text-align: center;"><th colspan=2>{{procatname}} SUMMARY REPORT</th></tr>
+                {% if protype != 'Consumable'%}
+                <tr style="text-align: center;">
+                  <th>Product Wise Summary</th>
+                    <th>Product Model Wise Summary</th>
+                </tr>
+                  {%endif%}
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="vertical-align: baseline;">
+                      <table class="table mb-0 tbl-server-info" style="text-align: center;">
+                      <thead class="bg-white text-uppercase">
+                        <tr class="ligth ligth-data">
+                          <th>Product Name</th>
+                          <th>Total Product</th>
+                          <th>Total In Stock</th>
+                          <th>Total Issued</th>
+                        </tr>
+                      </thead>
+                      <tbody class="ligth-body">                      
+                       
+                          {%for gs in gsum%}
+                        <tr>
+                          <td>{{gs.0}}</td>
+                          <td>{{gs.1}} </td>  
+                          <td>{{gs.2}}</td>
+                          <td>{{gs.3}} </td>                       
+                        </tr>    
+                        {%endfor%}                                       
+                      </tbody>
+                      <tr style="text-align: center;font-weight: bold;background-color: burlywood;">
+                          <td>Total</td>
+                          <td>{{grandtotal}}</td>
+                          <td>{{total_stock}}</td>
+                          <td>{{total_issue}}</td>
+                        </tr>
+                    </table>                  
+                  </td>
+                  {% if protype != 'Consumable'%}
+                    <td style="vertical-align: baseline;">
+                      <table class="table mb-0 tbl-server-info">
+                        <thead class="bg-white text-uppercase">
+                          <tr class="ligth ligth-data">
+                            <th>Product Name</th>
+                            <th>Product Model</th>
+                            <th>Total</th>
+                          </tr>
+                        </thead>
+                        <tbody class="ligth-body">
+                            {%for pclist in prosum%}
+                          <tr>
+                            <td>{{pclist.0}}</td>
+                            <td>{{pclist.1}}</td>
+                            <td>{{pclist.2}}</td>
+                          </tr>    
+                          {%endfor%}                 
+                        </tbody>
+                      </table>
+                    </td>
+                  {%endif%}
+                </tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div> 
+      <!-- ROW END-->
+      <!-- Page end  -->
+    </div>
+  </div>
+<script>
+function getProCat(){
+  $('#procatname').val($("#productcat option:selected").text());
+}
+</script>
+  
+{% endblock %}

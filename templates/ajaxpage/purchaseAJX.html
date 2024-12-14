@@ -1,0 +1,19 @@
+{%if flag == 'SerialNo'%}
+<tr>
+  <th>S.No.</th>
+  <th>Product Serial Number</th>
+</tr>
+{%for sr in sr_list %}
+<tr>
+  <td>{{forloop.counter}}</td>
+  <td>
+    {{sr}}<input
+      id="serno{{forloop.counter}}"
+      type="text"
+      name="serno"
+      style="display: none"
+      value="{{sr}}"
+    />
+  </td>
+</tr>
+{%endfor%} {%elif flag == 'BoxImage'%} {{boxdetails}} {%endif%}

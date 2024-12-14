@@ -1,0 +1,258 @@
+{% extends "home.html" %}
+{% block userDetails %}
+<div class="content-page">
+    <div class="container-fluid add-form-list">
+      <div class="row">
+      {%if flag == 'UPDATE'%}
+            <div class="col-sm-3">
+            <div class="card">
+                  <div class="card-header d-flex justify-content-between">
+                  <div class="header-title" style="text-align: center">
+                  <h4 class="card-title">User Details</h4>
+                  </div>
+                  </div>
+                  <div class="card-body">
+                        <form action="{% url 'userDetailsUpdate' %}" data-toggle="validator" method="post">
+                              {% csrf_token %}
+                              <div class="row">
+                              <div class="col-md-12">
+                                    {%for msg in messages%}
+                                          {% if msg.tags == "success" %}
+                                                <div class="alert alert-danger" role="alert">
+                                                      <div class="iq-alert-text">
+                                                            <b>{{ msg }}</b> 
+                                                      </div>
+                                                </div>
+                                          {%endif%}
+                                    {%endfor%}
+                              {%for uddata in uddata%}
+                              <input type="hidden" name="udid" value={{uddata.usr_id}} >                                                
+                              <div class="form-group">
+                              <label>User Type *</label>                            
+                              <select name="usrtype" id="usrtype" class="selectpicker form-control" data-style="py-0"  onchange="getUserDesignation()">
+                                    <option selected="true"  value="{{uddata.usr_des_id.usr_des_type}}">{{uddata.usr_des_id.usr_des_type}}</option>
+                                    <option disabled="disabled">--- Select ---</option>
+                                    <option value="Judge">Judge</option>
+                                    <option value="Staff">Staff</option>
+                              </select>                  
+                              </div> 
+                        </div>
+                        
+                        <div class="col-md-12">
+                              <div class="form-group">
+                              <label>User Designation*</label>
+                              <div class="search_select_box">
+                              <select name="usrdesig" id="usrdesig" class="selectpicker form-control" data-style="py-0" data-live-search="true" >
+                                    <option selected="true"  value="{{uddata.usr_des_id.usr_des_id}}">{{uddata.usr_des_id.usr_des_name}}</option>
+                                    <option disabled="disabled">--- Select User Designation ---</option>                               
+                              </select>
+                              </div>
+                              </div> 
+                        </div>                 
+                        <div class="col-md-12" >
+                              <div class="form-group">
+                              <label>User Name *</label>
+                              <input type="text" name="usrname" class="form-control" value="{{uddata.usr_name}}"  >
+                              </div>
+                        </div>
+                        <div class="col-md-12">
+                              <div class="form-group">
+                              <label>Mobile No *</label>
+                              <input type="text" name="usrmobile" class="form-control" value="{{uddata.usr_mobile}}"  >
+                              </div>
+                        </div>
+                        <!-- <div class="col-md-12">
+                              <div class="form-group">
+                              <label>User Location *</label>
+                              <div class="search_select_box">
+                                    <select name="usrloc" class="selectpicker form-control" data-style="py-0" data-live-search="true">
+                                          <option selected="true"  value="{{uddata.location_id.location_id}}">{{uddata.location_id.section_id.section_name}} ({{uddata.location_id.section_id.section_type}})</option>
+                                          <option disabled="disabled">--- Select User Location ---</option>  
+                                          {%for loc in list_of_loc %}
+                                          <option value="{{loc.location_id}}">
+                                                {{loc.section_id.section_name}} ({{loc.section_id.section_type}}) 
+                                          </option>  
+                                          {%endfor%}                                                            
+                                    </select>
+                              </div>
+                              </div> 
+                        </div>   -->
+                        {%endfor%}              
+                  </div>
+                  <div class="col-md-12 text-center">
+                        <div class="form-group">
+                              <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                        </div>
+                  </div>
+                  </form>
+                  </div>
+            </div>
+            </div>
+      {%else%}
+            <div class="col-sm-3">
+            <div class="card">
+                  <div class="card-header d-flex justify-content-between">
+                  <div class="header-title" style="text-align: center">
+                  <h4 class="card-title">User Details</h4>
+                  </div>
+                  </div>
+                  <div class="card-body">
+                        <form action="{% url 'userDetailsSubmit' %}" data-toggle="validator" method="post">
+                              {% csrf_token %}
+                              <div class="row">
+                              <div class="col-md-12">
+                              {%for msg in messages%}
+                                    {% if msg.tags == "info" %}
+                                          <div class="alert alert-warning" role="alert">
+                                                <div class="iq-alert-text">
+                                                      <b>{{ msg }}</b> 
+                                                </div>
+                                          </div>
+                                    {% elif msg.tags == "success" %}
+                                    <div class="alert alert-success" role="alert">
+                                          <div class="iq-alert-text">
+                                                <b>{{ msg }}</b> 
+                                          </div>
+                                    </div>
+                                    {%endif%}
+                              {%endfor%}
+                                                                                          
+                              <div class="form-group">
+                              <label>User Type *</label>                            
+                              <select name="usrtype" id="usrtype" class="selectpicker form-control" data-style="py-0"  onchange="getUserDesignation()">
+                                    <option selected="true" disabled="disabled">--- Select ---</option>
+                                    <option value="Judge">Judge</option>
+                                    <option value="Staff">Staff</option>
+                              </select>                  
+                              </div> 
+                        </div>
+                        
+                        <div class="col-md-12">
+                              <div class="form-group">
+                              <label>User Designation*</label>
+                              <div class="search_select_box">
+                              <select name="usrdesig" id="usrdesig" class="selectpicker form-control" data-style="py-0" data-live-search="true" >
+                                    <option selected="true" disabled="disabled">--- Select User Designation ---</option>                               
+                              </select>
+                              </div>
+                              </div> 
+                        </div>                 
+                        <div class="col-md-12" >
+                              <div class="form-group">
+                              <label>User Name *</label>
+                              <input type="text" name="usrname" class="form-control" placeholder="User Name"  >
+                              </div>
+                        </div>
+                        <div class="col-md-12">
+                              <div class="form-group">
+                              <label>Mobile No *</label>
+                              <input type="text" name="usrmobile" class="form-control" placeholder="Mobile No"  >
+                              </div>
+                        </div>
+                        <!-- <div class="col-md-12">
+                              <div class="form-group">
+                              <label>User Location *</label>
+                              <div class="search_select_box">
+                                    <select name="usrloc" class="selectpicker form-control" data-style="py-0" data-live-search="true">
+                                          <option selected="true" disabled="disabled">--- Select User Location ---</option>  
+                                          {%for loc in list_of_loc %}
+                                          <option value="{{loc.location_id}}">
+                                                {{loc.section_id.section_name}} ({{loc.section_id.section_type}}) 
+                                          </option>  
+                                          {%endfor%}                                                            
+                                    </select>
+                              </div>
+                              </div> 
+                        </div>                 -->
+                  </div>
+                  <div class="col-md-12 text-center">
+                        <div class="form-group">
+                              <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                        </div>
+                  </div>
+                  </form>
+                  </div>
+            </div>
+            </div>
+      {%endif%}
+  
+        <div class="col-sm-9">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                  <div class="header-title" style="text-align: center">
+                    <h4 class="card-title">All User Details</h4>
+                  </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                          <div class="col-lg-12">
+                                <div class="table-responsive rounded mb-3" style="overflow-y: scroll;height: 530px;">
+                                      <table class="data-table table mb-0 tbl-server-info">
+                                      <thead class="bg-white text-uppercase">
+                                            <tr class="ligth ligth-data">
+                                                  <th>User Type</th>                                                  
+                                                  <th>User Designation</th>                                                  
+                                                  <th>User Name</th>
+                                                  <th>Mobile No</th>
+                                                  <!-- <th>User Location</th> -->
+                                                  <th>Action</th>
+                                            </tr>
+                                      </thead>
+                                      <tbody class="ligth-body">
+                                          {%for udata in list_of_usr%}
+                                            <tr>                                         
+                                                  <td>{{udata.usr_des_id.usr_des_type}}</td>
+                                                  <td>{{udata.usr_des_id.usr_des_name}}</td> 
+                                                  <td>{{udata.usr_name}}</td>
+                                                  <td>{{udata.usr_mobile}}</td>    
+                                                  <!-- <td>
+                                                      <b>Building :</b> {{udata.location_id.section_id.building_name.building_name}} <br>
+                                                      <b>Section Name :</b> {{udata.location_id.section_id.section_name}} ({{udata.location_id.section_id.section_type}})<br>
+                                                      <b>Floor :</b> {{udata.location_id.floor}} <br>
+                                                      <b>Room No :</b> {{udata.location_id.roomno}} <br>
+                                                      <b>Landmark :</b> {{udata.location_id.landmark}}      
+                                                  </td>                                  -->
+                                                  <td>
+                                                  <div class="d-flex align-items-center list-action">
+                                                        
+                                                        <a class="badge bg-success mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"
+                                                        href=" {% url 'userDetailsUpdateRedirect'%}?udid={{udata.usr_id}}"
+                                                        >Edit</a>
+                                                        
+                                                  </div>
+                                                  </td>
+                                            </tr>   
+                                            {%endfor%}                                                               
+                                      </tbody>
+                                      </table>
+                                </div>
+                            </div>
+                      
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+      <!-- ROW END-->
+      <!-- Page end  -->
+    </div>
+  </div>
+  <script>
+      function getUserDesignation(){
+          usrtype=$('#usrtype').val();
+          $.ajax({
+            type:"GET",
+            url: "/userDesignationFilter",
+            data:{
+                  usrtype: usrtype
+            },
+            success: function(data) 
+            {
+              $('#usrdesig').html(data);
+              $('#usrdesig').selectpicker('refresh');
+            }
+          })
+      }
+</script>
+{% endblock %}
+

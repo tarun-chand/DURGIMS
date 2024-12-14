@@ -1,0 +1,15 @@
+{%if flag == 'allrepo'%}
+  {%for r in result%}
+  <tr>
+    <td>{{forloop.counter}}</td>
+    <td>Category : {{r.0}} <br> Company : {{r.1}} <br> Model:  {{r.2}}</td>                            
+    <td>{{r.3}}</td>
+    <td>{{r.4}}</td>
+    <td>{{r.5}}</td>
+    <td>{{r.6}}</td>
+    <td>{{r.7}}</td>
+    <td>{{r.8}}</td>
+    <td>{{r.13}}</td>
+  </tr>
+  {%endfor%}  
+{%endif%}

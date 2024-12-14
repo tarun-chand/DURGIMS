@@ -1,0 +1,149 @@
+SELECT d.section_name,b.staff_des_name,g.product_cat_name,f.product_com_name,e.product_mod_name,
+h.product_serialno,h.product_new_or_open,h.cartridge_toner,c.* 
+FROM 
+public.inventory_sectiondesignationmapper a,
+public.inventory_staffdesignationmaster b,
+public.inventory_producttransactiondetails c,
+public.inventory_sectiondetails d,
+public.inventory_productmodelmaster e,
+public.inventory_productcompanymaster f,
+public.inventory_productcategorymaster g,
+public.inventory_productdetails h
+
+
+where  d.section_id = a.section_id 
+and b.staff_id = a.staff_id 
+and c.sdm_id = a.sdm_id
+and c.product_id = h.product_id
+and h.product_mod_id = e.product_mod_id
+and e.product_com_id = f.product_com_id
+and f.product_cat_id = g.product_cat_id
+and d.section_id = 41
+and c.trans_flag='0'
+
+
+SELECT setval('payments_id_seq', 21, true);
+
+
+SELECT * FROM "public"."inventory_transactiondetails" a,
+"public"."inventory_producttransactiondetails" b,
+"public"."inventory_sectiondesignationmapper" c
+where 
+a.trans_id = b.trans_id and
+a.sdm_id = c.sdm_id and
+b.trans_flag=0 and
+c.section_id =46;
+
+
+SELECT a.product_cat_id,a.product_type,a.product_cat_name,b.product_com_id,b.product_com_name,c.product_mod_id,c.product_mod_name,d.product_id,d.product_serialno,d.entry_date,d.current_quantity,d.cartridge_toner,d.remarks,d.product_new_or_open,d.propur_id FROM "public"."inventory_productcategorymaster" a,"public"."inventory_productcompanymaster" b,"public"."inventory_productmodelmaster" c,"public"."inventory_productdetails" d where d.product_mod_id = c.product_mod_id and c.product_com_id = b.product_com_id and b.product_cat_id = a.product_cat_id
+
+
+SELECT product_com_name,product_mod_name,count(product_mod_name) as cmod_count,product_type FROM completeproductdetail where product_type='Non-Consumable'  GROUP BY product_com_name,product_mod_name,product_type ORDER BY product_com_name
+
+
+Designation and Section Details
+SELECT
+sdm_id,b.section_id,c.staff_id,ip_address,section_type,section_name,floor,roomno,landmark,building_id,staff_des_name,staff_type
+FROM 
+"public"."inventory_sectiondesignationmapper" a,
+"public"."inventory_sectiondetails" b,
+"public"."inventory_staffdesignationmaster" c
+WHERE
+a.section_id = b.section_id and
+a.staff_id = c.staff_id
+
+
+Designation with User Details
+SELECT 
+a.sdm_id,a.section_id,staff_id,ip_address,emp_jou_id,doj,dot,current_status,c.usr_id,usr_name,usr_mobile,entry_date,usr_type
+FROM 
+"public"."inventory_sectiondesignationmapper" a,
+"public"."inventory_employee_journey" b,
+"public"."inventory_userdetails" c
+WHERE
+a.sdm_id = b.sdm_id and
+b.usr_id = c.usr_id 
+
+
+
+SELECT 
+a.sdm_id,a.section_id,a.staff_id,ip_address,emp_jou_id,doj,dot,current_status,c.usr_id,usr_name,usr_mobile,entry_date,usr_type,d.staff_des_name
+FROM 
+"public"."inventory_sectiondesignationmapper" a,
+"public"."inventory_employee_journey" b,
+"public"."inventory_userdetails" c,
+ "public"."inventory_staffdesignationmaster" d
+WHERE
+a.sdm_id = b.sdm_id and
+b.usr_id = c.usr_id and 
+a.staff_id = d.staff_id 
+
+
+
+Transaction Details with designation
+SELECT *
+a.sdm_id,section_id,staff_id,ip_address,trans_id,trans_issue_date,issue_received_status,pro_trans_id,trans_flag,no_of_item_issue,issue_remarks,trans_return_date 
+,no_of_item_return,return_remarks,return_received_status,productid_id
+FROM 
+"public"."inventory_sectiondesignationmapper" a,
+"public"."inventory_transactiondetails" b,
+"public"."inventory_producttransactiondetails" c
+WHERE
+a.sdm_id = b.sdm_id and
+b.trans_id = c.trans_id
+
+
+
+
+SELECT 
+product_com_name,product_mod_name,product_serialno,product_id,
+b.sdm_id,b.section_id,b.staff_id,b.ip_address,section_type,section_name,staff_des_name,usr_name
+FROM 
+completeproductdetail a 
+LEFT JOIN transactiondesignationview b
+ON a.product_id = b.productid_id
+LEFT JOIN sectiondesignationview c ON
+b.sdm_id = c.sdm_id LEFT JOIN userdesignationview d ON
+c.sdm_id = d.sdm_id
+
+
+SELECT product_cat_name,
+product_com_name,product_mod_name,product_serialno,
+section_name,staff_des_name,usr_name,b.ip_address,
+CASE WHEN b.sdm_id IS NULL THEN 'IN STOCK'  ELSE 'ISSUED' END AS status
+FROM 
+completeproductdetail a 
+LEFT JOIN transactiondesignationview b
+ON a.product_id = b.productid_id
+LEFT JOIN sectiondesignationview c ON
+b.sdm_id = c.sdm_id LEFT JOIN userdesignationview d ON
+c.sdm_id = d.sdm_id
+
+
+
+
+
+select product_cat_name,product_com_name,product_mod_name,product_serialno,c.section_name,c.staff_des_name,d.usr_name 
+FROM 
+completeproductdetail a,transactiondesignationview b,sectiondesignationview c,userdesignationview d,inventory_transactiondetails e
+WHERE 
+a.product_id = b.productid_id and
+b.section_id = c.section_id and
+c.sdm_id = d.sdm_id and
+b.
+a.product_mod_id=97 and
+b.trans_flag=0
+
+
+----GET DETAILS BY USER
+
+select product_cat_name,product_com_name,product_mod_name,product_serialno,cartridge_toner,trans_issue_date,issue_remarks,usr_name from 
+transactiondesignationview a,
+userdesignationview b,
+completeproductdetail c 
+where 
+a.sdm_id=b.sdm_id and 
+a.productid_id=c.product_id and 
+a.trans_flag=0 and  
+b.usr_id = 205
+ORDER BY product_serialno DESC

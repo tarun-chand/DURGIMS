@@ -1,0 +1,557 @@
+{% extends "home.html" %} {% block theDashboard %}
+<style>
+  .dt-search {
+    float: right;
+  }
+</style>
+<div class="content-page">
+  <div class="container-fluid add-form-list pb-2">
+    <div class="row">
+      <div class="col-lg-1"></div>
+      <div class="col-lg-5 text-center">
+        <label>Search By Court/Section Name :</label>
+        <div class="search_select_box">
+          <select
+            name="sectionid"
+            id="sectionid"
+            class="selectpicker form-control"
+            data-style="py-0"
+            data-live-search="true"
+            onchange="getAllCourtData()"
+          >
+            <option selected="true" disabled="disabled">-- Select --</option>
+            {%for pdlist in list_all_sc%}
+            <option value="{{pdlist.section_id}}">
+              {{pdlist.section_name}}
+            </option>
+            {%endfor%}
+          </select>
+        </div>
+      </div>
+      <div class="col-lg-5 text-center">
+        <label>Search By User Name :</label>
+        <div class="search_select_box">
+          <select
+            name="sectionid"
+            id="userid"
+            class="selectpicker form-control"
+            data-style="py-0"
+            data-live-search="true"
+            onchange="getAllUserData()"
+          >
+            <option selected="true" disabled="disabled">-- Select --</option>
+            {%for ulist in list_all_usr%}
+            <option value="{{ulist.usr_id}}">
+              {{ulist.usr_name}}
+            </option>
+            {%endfor%}
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid add-form-list" id="userdata" style="display: none">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-block card-stretch card-height">
+          <div class="card-header d-flex align-items-center justify-content-between pt-2 pb-2" style="background-color: antiquewhite">
+            <div class="header-title mx-auto">
+              <h4 class="card-title" id="cshead1">COMPUTER ARTICLES DETAILS</h4>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top: 10px">            
+            <div class="col-md-12 text-center" id="userdashboarddatakeeper">
+              <!-- This will Hold All the datatable with data return from python -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid add-form-list" id="courtdata" style="display: none" >
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-block card-stretch card-height">
+          <div
+            class="
+              card-header
+              d-flex
+              align-items-center
+              justify-content-between
+              pt-2
+              pb-2
+            "
+            style="background-color: antiquewhite"
+          >
+            <div class="header-title mx-auto">
+              <h4 class="card-title" id="cshead"></h4>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top: 10px">
+            <!-- <input type="text" id="udata" /> -->
+            <div id="tempdataholder">
+              <input type="hidden" id="total_data" /><input
+                type="hidden"
+                id="csname"
+              />
+            </div>
+            <div class="col-md-12 text-center" id="dashboarddatakeeper">
+              <!-- This will Hold All the datatable with data return from python -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%if flag == 1%}
+  <div
+    class="container-fluid add-form-list"
+    id="courtsumdata"
+    style="display: block"
+  >
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-block card-stretch card-height">
+          <div
+            class="
+              card-header
+              d-flex
+              align-items-center
+              justify-content-between
+              pt-2
+              pb-2
+            "
+            style="background-color: antiquewhite"
+          >
+            <div class="header-title mx-auto">
+              <h4 class="card-title">SUMMARY REPORT</h4>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top: 10px">
+            <div class="col-md-12 text-center" id="sumdatakeeper">
+              <!-- This will Hold All the datatable with data return from python -->
+              
+              <div class="table-responsive">
+                <table
+                  class="data-table table mb-0 tbl-server-info"
+                  style="width: 100% !important; table-layout: fixed"
+                  id="sumtabdata"
+                >
+                  <thead>
+                    <tr>
+                      <th>Product Category</th>
+                      <th>Product Name</th>
+                      <th>Product Make Model</th>
+                      <th><span style="color:darkblue;">Total Product</span></th>
+                      <th><span style="color:orangered;">Total Issued</span></th>
+                      <th><span style="color:green;">Total IN Hand Working Stock</span></th>
+                      <th><span style="color: #581845 ;">Total Repair</span></th>
+                      <th><span style="color:red;">Total Dead Stock</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {%for r in result%}
+                    <tr>
+                      <td>{{r.0}}</td>
+                      <td>{{r.1}}</td>
+                      <td>{{r.2}}</td>
+                      <td><span style="color:darkblue;">{{r.3}}</span></td>
+                      <td>{%if r.5 != 0%}<a href="{% url 'dashboardOperational'%}?source=issued&pro_mod_id={{r.7}}" style='color:orangered;font-weight:bold'>{{r.5}}</a>{%else%}{{r.5}}{%endif%}</td>                          
+                      <td>{%if r.4 != 0%}<a href="{% url 'dashboardOperational'%}?source=inhand&pro_mod_id={{r.7}}" style='color:green;font-weight:bold'>{{r.4}}</a>{%else%}{{r.4}}{%endif%}</td>
+                      <td>{%if r.9 != 0%}<a href="{% url 'dashboardOperational'%}?source=repair&pro_mod_id={{r.7}}" style='color:#581845 ;font-weight:bold'>{{r.9}}</a>{%else%}{{r.9}}{%endif%}</td>                          
+                      <td>{%if r.8 != 0%}<a href="{% url 'dashboardOperational'%}?source=dead&pro_mod_id={{r.7}}" style='color:red;font-weight:bold'>{{r.8}}</a>{%else%}{{r.8}}{%endif%}</td>                          
+                    </tr>
+                    {%endfor%}
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endif%}
+</div>
+
+<script>
+
+function getAllCourtData() {  
+    sectionid = $("#sectionid").val();
+    let mybutton=[];
+    $.ajax({
+      type: "GET",
+      url: "/getCourtSectionWiseData",
+      data: {
+        sectionid: sectionid,
+        source: "head",
+      },
+      success: function (data) {        
+        $("#dashboarddatakeeper").html(data.all_table);
+        $("#total_data").val(data.data_count);        
+        $("#csname").val(data.csname);        
+        let a =
+          "<label>Court/Section Name : </label>" +
+          "  " +
+          "<label style='color: crimson;'>" +
+          data.csname +
+          "</label>";
+        $("#cshead").html(a); 
+        verified = data.verified
+        pdffilename = data.pdffilename          
+                    
+        f = data.flag;      
+        if (f == 0) {
+          document.getElementById("courtdata").style.display = "block";
+          document.getElementById("courtsumdata").style.display = "none";
+          document.getElementById("userdata").style.display = "none";
+          
+        } else {
+          document.getElementById("courtdata").style.display = "none";
+          document.getElementById("courtsumdata").style.display = "block";
+          document.getElementById("userdata").style.display = "none";
+        }
+        
+      },
+      complete: function () {        
+        for (let i = 1; i <= $("#total_data").val(); i++) {
+          mybutton = [];
+          mybutton.push(
+            {
+              extend: "pdfHtml5",
+              pageSize: 'A4',
+              orientation: "landscape",
+              title:
+                "Court/Section Name :- " +
+                $("#csname").val(),        
+                customize: function (doc) {
+                  // Center the title
+                  doc.content[0].style = { alignment: 'center', fontSize: 18,bold: true };                  
+                  // Add additional text below the title   
+                  
+                  doc.content.splice(1, 0, {
+                    columns: [                                                
+                      {
+                        text: 'Assigned To : ' + $("#staff_des_name" + (i - 1)).val(),
+                        alignment: 'left', // Center-align the "Assigned To"
+                        fontSize: 16,
+                        width: '33%' // Allocate one-third of the space for this text
+                      },
+                      {
+                        text: 'Current Staff : ' + $("#username" + (i - 1)).val(),
+                        alignment: 'center', // Center-align the "Current Staff"
+                        fontSize: 16,
+                        width: '33%' // Allocate one-third of the space for this text
+                      },
+                      {
+                        text: 'Date Of Posting : ' + $("#itdate" + (i - 1)).val(),
+                        alignment: 'right', // Center-align the "Date Of Joining"
+                        fontSize: 16,
+                        width: '33%' // Allocate more space for this text
+                      }
+                    ],
+                    margin: [0, 2, 0, 10] // Add space after the row
+                  });
+                  
+                  
+                
+                  // Make the table fully stretched
+                  const tableIndex = doc.content.findIndex(item => item.table); // Find the table in the content
+                  if (tableIndex !== -1) {
+                    const pageWidth = 760;  // The width of the page (in points)
+                    console.log('pageWidth----' + pageWidth);
+                    
+                    // Adjust the table width to fit the page width, minus margins (default margin is 40)
+                    const tableWidth = pageWidth - 40;  // 40 is the combined left and right margin
+                    console.log('tableWidth----' + tableWidth);
+                    
+                    // Define custom column widths (in percentage or points) - Example for 6 columns
+                    const columnWidths = [5, 13, 30, 19, 8, 25]; // Define widths for each column (in percentage)
+                    const totalWidthPercentage = columnWidths.reduce((sum, width) => sum + width, 0);
+                    
+                    // Ensure the sum of column widths is equal to 100% or adjust proportionally
+                    if (totalWidthPercentage !== 100) {
+                      const scaleFactor = 100 / totalWidthPercentage;
+                      columnWidths.forEach((width, index) => {
+                        columnWidths[index] = (width * scaleFactor); // Adjust each column's width to ensure the total adds up to 100%
+                      });
+                    }
+                    
+                    console.log('Adjusted column widths (in percentage): ' + columnWidths);
+                    
+                    // Convert column widths from percentage to points based on the available table width
+                    const columnWidthsInPoints = columnWidths.map(width => (tableWidth * width) / 100);
+                    console.log('Column widths in points: ' + columnWidthsInPoints);
+                    
+                    // Get the table from the content
+                    const table = doc.content[tableIndex].table; 
+                    
+                    // Set the column widths for the table
+                    table.widths = columnWidthsInPoints; // Assign the calculated widths to the table columns
+                    
+                    // Now, you can proceed with any additional customization to your table (alignment, row styles, etc.)
+                    
+                    // Apply cell padding, alignment, and row background colors
+                    table.body.forEach((row, rowIndex) => {
+                      row.forEach((cell, cellIndex) => {
+                        if (typeof cell === 'object') {
+                          cell.margin = [1,1,1,1]; // Padding: [left, top, right, bottom]
+                          cell.alignment = 'center'; // Center-align text
+                          if (rowIndex % 2 === 1) cell.fillColor = '#f2f2f2'; // Apply background color to odd rows
+                        } else {
+                          // Convert plain strings to objects to apply styles
+                          row[cellIndex] = {
+                            text: cell,
+                            margin: [1,1,1,1], // Padding
+                            alignment: 'center', // Alignment
+                            fillColor: rowIndex % 2 === 1 ? '#f2f2f2' : null // Apply background color to odd rows
+                          };
+                        }
+                      });
+                    });
+                  }
+                
+                  // Add text below the table (left and right aligned)
+                  doc.content.push({
+                    columns: [
+                      {
+                        text: 'Verified By', // Left-aligned text
+                        alignment: 'left',
+                        fontSize: 14,
+                        bold: true,
+                        margin: [0, 60, 0, 0] // Add spacing above the text
+                      },
+                      {
+                        text: $("#username" + (i-1)).val(), // Right-aligned text
+                        alignment: 'right',
+                        fontSize: 14,
+                        bold: true,
+                        margin: [0, 60, 0, 0] // Add spacing above the text
+                      }
+                    ]
+                  });
+                }
+            },
+            {
+              extend: "excelHtml5",
+              title:
+                "Court/Section Name :- " +
+                $("#csname").val() +
+                "\n\n" +
+                $("#udata" + (i - 1)).val(),
+            }  
+          );
+          if (verified[i-1] == 'YES'){
+            mybutton.push(          
+            {
+              text: 'Pawati', // Custom button text
+              className: 'btn btn-primary', // Optional: Add a custom CSS class
+              action: function (e, dt, node, config) {                                 
+                const link = document.createElement('a');                                
+                link.href = '/media/Pawati/'+pdffilename[i-1];   
+                link.target = '_blank'; // Open link in a new tab             
+                link.click();               
+              }
+            });                        
+          }
+          else{
+            mybutton.push(          
+            {
+              text: 'Not Verified', // Custom button text
+              className: 'btn btn-primary', // Optional: Add a custom CSS class              
+            }
+            );          
+          }          
+          $("#datakeeper" + i).DataTable({
+            destroy: true,
+            buttons:mybutton,
+            dom: "Bfrtip",
+            bPaginate: false,
+            ScrollCollapse: true,
+          });
+        
+        }
+      },
+    });
+  }
+
+  function getAllUserData() {      
+    userid = $("#userid").val();    
+    let mybutton = [];
+    $.ajax({
+      type: "GET",
+      url: "/getCourtSectionUserWiseData",
+      data: {
+        sectionid: userid,    
+        source:'Admin',    
+      },
+      success: function (data) {
+
+        flag = data.verified        
+        if(data.dlen > 0 ){
+          $("#userdashboarddatakeeper").html(data.all_table);                     
+          document.getElementById("userdata").style.display = "block";
+          document.getElementById("courtdata").style.display = "none";
+          document.getElementById("courtsumdata").style.display = "none";
+        }
+        else
+          $("#userdashboarddatakeeper").html(data.emsg);    
+        pdffile = $("#pdffilename").val();  
+        mybutton.push(
+        {
+          extend: "pdfHtml5",
+          pageSize: 'A4',
+          orientation: "landscape",
+          title:
+              "Court/Section Name :- " +
+              $("#cosecname").val(),        
+            customize: function (doc) {
+              // Center the title
+              doc.content[0].style = { alignment: 'center', fontSize: 18,bold: true };                  
+              // Add additional text below the title            
+              
+              doc.content.splice(1, 0, {
+                columns: [                                                
+                  {
+                    text: 'Assigned To : ' + $("#staff_des_name").val(),
+                    alignment: 'left', // Center-align the "Assigned To"
+                    fontSize: 16,
+                    width: '33%' // Allocate one-third of the space for this text
+                  },
+                  {
+                    text: 'Current Staff : ' + $("#username").val(),
+                    alignment: 'center', // Center-align the "Current Staff"
+                    fontSize: 16,
+                    width: '33%' // Allocate one-third of the space for this text
+                  },
+                  {
+                    text: 'Date Of Posting : ' + $("#itdate").val(),
+                    alignment: 'right', // Center-align the "Date Of Joining"
+                    fontSize: 16,
+                    width: '33%' // Allocate more space for this text
+                  }
+                ],
+                margin: [0, 2, 0, 10] // Add space after the row
+              });
+              
+              
+            
+              // Make the table fully stretched
+              const tableIndex = doc.content.findIndex(item => item.table); // Find the table in the content
+              if (tableIndex !== -1) {
+                const pageWidth = 760;  // The width of the page (in points)
+                console.log('pageWidth----' + pageWidth);
+                
+                // Adjust the table width to fit the page width, minus margins (default margin is 40)
+                const tableWidth = pageWidth - 40;  // 40 is the combined left and right margin
+                console.log('tableWidth----' + tableWidth);
+                
+                // Define custom column widths (in percentage or points) - Example for 6 columns
+                const columnWidths = [5, 13, 30, 19, 8, 25]; // Define widths for each column (in percentage)
+                const totalWidthPercentage = columnWidths.reduce((sum, width) => sum + width, 0);
+                
+                // Ensure the sum of column widths is equal to 100% or adjust proportionally
+                if (totalWidthPercentage !== 100) {
+                  const scaleFactor = 100 / totalWidthPercentage;
+                  columnWidths.forEach((width, index) => {
+                    columnWidths[index] = (width * scaleFactor); // Adjust each column's width to ensure the total adds up to 100%
+                  });
+                }
+                
+                console.log('Adjusted column widths (in percentage): ' + columnWidths);
+                
+                // Convert column widths from percentage to points based on the available table width
+                const columnWidthsInPoints = columnWidths.map(width => (tableWidth * width) / 100);
+                console.log('Column widths in points: ' + columnWidthsInPoints);
+                
+                // Get the table from the content
+                const table = doc.content[tableIndex].table; 
+                
+                // Set the column widths for the table
+                table.widths = columnWidthsInPoints; // Assign the calculated widths to the table columns
+                
+                // Now, you can proceed with any additional customization to your table (alignment, row styles, etc.)
+                
+                // Apply cell padding, alignment, and row background colors
+                table.body.forEach((row, rowIndex) => {
+                  row.forEach((cell, cellIndex) => {
+                    if (typeof cell === 'object') {
+                      cell.margin = [1,1,1,1]; // Padding: [left, top, right, bottom]
+                      cell.alignment = 'center'; // Center-align text
+                      if (rowIndex % 2 === 1) cell.fillColor = '#f2f2f2'; // Apply background color to odd rows
+                    } else {
+                      // Convert plain strings to objects to apply styles
+                      row[cellIndex] = {
+                        text: cell,
+                        margin: [1,1,1,1], // Padding
+                        alignment: 'center', // Alignment
+                        fillColor: rowIndex % 2 === 1 ? '#f2f2f2' : null // Apply background color to odd rows
+                      };
+                    }
+                  });
+                });
+              }
+            
+              // Add text below the table (left and right aligned)
+              doc.content.push({
+                columns: [
+                  {
+                    text: 'Verified By', // Left-aligned text
+                    alignment: 'left',
+                    fontSize: 14,
+                    bold: true,
+                    margin: [0, 60, 0, 0] // Add spacing above the text
+                  },
+                  {
+                    text: $("#username").val(), // Right-aligned text
+                    alignment: 'right',
+                    fontSize: 14,
+                    bold: true,
+                    margin: [0, 60, 0, 0] // Add spacing above the text
+                  }
+                ]
+              });
+            }
+        },
+        {
+          extend: "excelHtml5",  
+          title:
+          "DCD_IMS" + "\n" +
+          "COMPUTER ARTICLES DETAILS" + "\n\n" +                  
+          $("#udata").val(),              
+        });                                 
+        if (flag == 'YES'){
+          mybutton.push(          
+            {
+              text: 'Pawati', // Custom button text
+              className: 'btn btn-primary', // Optional: Add a custom CSS class
+              action: function (e, dt, node, config) {                                 
+                const link = document.createElement('a');                                
+                link.href = pdffile;     
+                link.target = '_blank'; // Open link in a new tab            
+                link.click();               
+              }
+            }
+            );    
+          }     
+        console.log(mybutton);
+      },
+      complete: function () {        
+          $("#userdatakeeper").DataTable({
+            destroy: true,
+            buttons:mybutton,
+            dom: "Bfrtip",
+            bPaginate: false,
+            ScrollCollapse: true,                
+          });
+      },
+    });
+  }
+
+  
+</script>
+{% endblock %}

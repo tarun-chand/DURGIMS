@@ -1,0 +1,88 @@
+{%if flag == 'productCategoryList'%}
+<option selected="true" disabled="disabled">--- Select ---</option>
+{%for pclist in list_all_protype %}
+<option value="{{pclist.product_cat_id}}">{{pclist.product_cat_name}}</option>
+{%endfor%} {%elif flag == 'productCompanyList'%}
+<option selected="true" disabled="disabled">
+  -- Company Name :-: [ Model Name] --
+</option>
+{%for pclist in list_all_com %}
+<option value="{{pclist.product_mod_id}}">
+  {{pclist.product_com.product_com_name}} :-: {{pclist.product_mod_name}}
+</option>
+{%endfor%} {%elif flag == 'ProductModelList'%}
+
+<option selected="true" disabled="disabled">
+  -- Company Name -> Model Name -> SerialNo --
+</option>
+{%for prodlist in list_all_mod %} 
+{%if prodlist.10 == 0%}
+<option
+  style="background-color: #848884; color: aliceblue"
+  value="{{prodlist.7}}"
+  disabled="disabled"
+>
+  {{prodlist.4}} ->
+  {{prodlist.6}} -> {{prodlist.8}}
+</option>
+{%elif prodlist.18 == 'Dead Stock'%}
+<option
+  style="background-color: #880808; color: aliceblue"
+  value="{{prodlist.7}}"
+  disabled="disabled"
+>
+  {{prodlist.4}} ->
+  {{prodlist.6}} -> {{prodlist.8}} 
+</option>
+{%elif prodlist.18 == 'Needs To Repair'%}
+<option
+  style="background-color: #00A36C; color: aliceblue"
+  value="{{prodlist.7}}"
+  disabled="disabled"
+>
+  {{prodlist.4}} ->
+  {{prodlist.6}} -> {{prodlist.8}} 
+</option>
+{%else%}
+<option value="{{prodlist.7}}">
+  {{prodlist.4}} ->
+  {{prodlist.6}} -> {{prodlist.8}}
+</option>
+{%endif%} {%endfor%} {%elif flag == 'SectionDetailList'%}
+<option selected="true" disabled="disabled">-- Section Name --</option>
+{%for seclist in list_all_sec %}
+<option value="{{seclist.section_id}}">{{seclist.section_name}}</option>
+{%endfor%} {%elif flag == 'SectionDesigList'%}
+<option selected="true" disabled="disabled">-- Designation - Current User --</option>
+{%for desiglist in list_all_desig %}
+<option value="{{desiglist.0}}">{{desiglist.13}} - {{desiglist.9}}</option>
+{%endfor%} {%elif flag == 'UserIssuedAssestList'%}
+<option selected="true" disabled="disabled">
+  Product Categoty --> [Product Name - Product Model --> Product Serial No --> Quantity]
+</option>
+{%for trn in trn_det_list %}
+<option
+  value="{{trn.4}},{{trn.7}}"
+>
+  {{trn.0}} --> [ {{trn.1}} - {{trn.2}} --> {{trn.3}} --> {{trn.5}} ]
+</option>
+{%endfor%} {%elif flag == 'ReplaceAssestList'%}
+<option selected="true" disabled="disabled">
+  Product Categoty --> [Product Name - Product Model - Product Serial No - Quantity]
+</option>
+{%for ral in rep_ass_List %} {%if ral.5 == 0%}
+<option
+  style="background-color: rgb(177, 173, 173); color: aliceblue"
+  value="{{ral.4}},{{ral.6}}"
+  disabled="disabled"
+>
+  {{ral.0}} --> {{ral.1}} - {{ral.2}} --> {{ral.3 }} --> {{ral.5}}
+</option>
+{%else%}
+<option style="color:black" value="{{ral.4}},{{ral.6}},{{ral.7}}">
+  {{ral.0}} --> {{ral.1}} - {{ral.2}} --> {{ral.3 }} --> {{ral.5}}
+</option>
+{%endif%} {%endfor%} 
+{%elif flag == 'UserDataList'%}
+  {{data_list}}
+{%endif%}

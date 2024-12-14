@@ -1,0 +1,139 @@
+{% extends "home.html" %} {% block userDesignation %}
+<form
+  action="{% url 'DEMSubmit' %}"
+  data-toggle="validator"
+  method="post"
+>
+  {% csrf_token %}
+<div class="content-page">
+  <div class="container-fluid add-form-list">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+            <div class="header-title" style="text-align: center">
+              <h4 class="card-title">
+                Designation Employee Mapper
+              </h4>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">                
+                <div class="form-group">
+                  <label>Section*</label>
+                  <select
+                      name="secdes"
+                      id="secdes"
+                      class="selectpicker form-control"
+                      data-style="py-0"
+                      data-live-search="true"
+                      
+                    >
+                      <option selected="true" disabled="disabled">
+                        -- Select --
+                      </option>
+                      {%for sdlist in list_of_sd%}
+                      <!-- <option value="{{pdlist.product_cat_id.product_cat_id}}">{{pdlist.product_cat_id.product_cat_name}} :-: [ {{pdlist.product_cat_id.product_type}} ]</option>    -->
+                      <option value="{{sdlist.section_id}}">
+                        {{sdlist.section_name}}
+                      </option>
+                      {%endfor%}
+                    </select>
+                </div>
+              </div>        
+             
+              <div class="col-sm-1">
+                <div class="form-group">
+                  <br />
+                  <label
+                    style="
+                      background-color: cadetblue;
+                      margin: 7px;
+                      padding: 7px 20px 7px 20px;
+                      border-radius: 10px;
+                      font-size: 22px;
+                    "
+                    onclick="getSelectedSectionDesignation()"
+                    >Add</label
+                  ><br />
+                </div>
+              </div>
+            </div>            
+            <div class="col-md-12 text-center">              
+                <table class="table" style="width:100%" id='datakeeper'>
+                  <thead>
+                    <tr class="ligth">
+                        <th scope="col">Serial No</th>
+                        <th scope="col">Section</th>
+                        <th scope="col">Designation</th>        
+                        <th scope="col">IP Address</th>        
+                        <th scope="col">Staff</th>        
+                        <th scope="col">Date Of Joining</th>        
+                    </tr>
+                </thead>
+                <tbody>                                              
+                </tbody>               
+                </table>                
+            </div>
+            <div class="col-md-12">
+              <div class="form-group text-center">
+                <button
+                  type="submit"
+                  id="subButton"
+                  class="mt-2 btn btn-success"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+ <script>     
+  function getSectionDesignation(){
+    secdes = $("#secdes").val();
+    $.ajax({
+      type: "GET",
+      url: "/getAllDesignationOfSection",
+      data: {
+        secdes: secdes,
+      },
+      success: function (data) {
+        console.log(data);
+        $("#datakeeper").html(data);        
+      },
+    });
+  }
+  function getSelectedSectionDesignation(){
+    secdes = $("#secdes").val();
+    $.ajax({
+      type: "GET",
+      url: "/getDesignationOfSection",
+      data: {
+        secdes: secdes,
+      },
+      success: function (data) {
+        $("#datakeeper").find("tr:gt(0)").remove();
+        $("#datakeeper tr:last").after(data);    
+        var l = ($("#datakeeper tr").length);
+        console.log(l);        
+        for(var i=1;i<=l;i++){
+          userid = "userid"+i;
+          console.log("userid");
+          console.log(userid);
+          $("#"+userid).selectpicker("refresh");
+        }
+      // $("#userid").selectpicker("refresh");
+      },
+    });    
+  }
+ 
+ </script>
+ {% endblock %}
+</div>

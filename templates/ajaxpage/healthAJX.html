@@ -1,0 +1,34 @@
+{%if flag == 'healthUpdate'%}
+{%for hp in list_of_hprod%}
+<input type="hidden" name="healthid" value="{{hp.health_id}}" >
+  <table style="width: 100% !important; table-layout: fixed">
+    <tr>
+      <td>
+          <span><label>Product Type :</label>{{hp.product.product_mod.product_com.product_cat.product_cat_name }}</span><br>
+          <span><label>Product Make and Model :</label>{{hp.product.product_mod.product_com.product_com_name }} {{hp.product.product_mod.product_mod_name}}</span><br>
+          <span><label>Product Serial No :</label>{{hp.product.product_serialno}}</span><br>
+      </td>
+      <td>
+        <label>Product Status *</label>   
+        <div class="form-group">
+          <select name="productstatus" id="productstatus" class="selectpicker form-control" data-style="py-0">
+            <option selected="true"  value="{{hp.product_status}}">{{hp.product_status}}</option>
+            <option> --- Select --- </option>
+            <option value="Working">Working</option>
+            <option value="Needs To Repair">Needs To Repair</option>
+            <option value="Dead Stock">Dead Stock</option>
+          </select>   
+      </div>                         
+      </td>
+      <td>                                  
+        <label>Product Health Remark *</label>
+        <textarea name = "healthRemark"class="form-control"id="healthRemark"rows="1">{{hp.health_remarks}}</textarea>                                 
+      </td>
+      <td>
+        <br>
+        <button type="submit" class="btn btn-primary mr-2">Update</button>
+      </td>
+    </tr>
+  </table>  
+  {%endfor%}  
+{%endif%}

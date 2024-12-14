@@ -1,0 +1,6 @@
+{%if flag == 'buildingFilter'%}
+    <option selected="true" disabled="disabled">--- Select ---</option>                           
+    {%for blist in list_all_build %}
+    <option value="{{blist.building_id}}">{{blist.building_name}}</option>
+    {%endfor%}
+{%endif%}

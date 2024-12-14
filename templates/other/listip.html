@@ -1,0 +1,30 @@
+{% extends "home.html" %} {% block ipAddressCheck %}
+
+<div class="content-page">
+ <div class="container-fluid"> 
+ <button type="submit" id="dbdatasubButton" class="mt-2 btn btn-success" onclick="checkIP()" > Refresh IP List </button>
+  <h4 class="mb-3 text-center">  IP Address List</h4>
+
+  <div class="col-lg-12">
+   <div class="table-responsive rounded mb-3" style="text-align: center;">
+    <table class="data-table table mb-0 tbl-server-info" id = "dashboarddatakeeper">
+         
+    </table>
+   </div>
+  </div>
+ </div>
+</div>
+<script>
+ function checkIP() {  
+   
+    $.ajax({
+      type: "GET",
+      url: "/checkIP",      
+      success: function (data) {     
+        console.log("ASDFGHJKLLJHKJHG",data.tabdata);
+        $("#dashboarddatakeeper").html(data.tabdata);               
+      },
+    });
+  }
+</script>
+{% endblock %}

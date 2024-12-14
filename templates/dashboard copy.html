@@ -1,0 +1,570 @@
+{% extends "home.html" %} {% block theDashboard %}
+<style>
+  .dt-search{
+    float: right;
+  }
+</style>
+<div class="content-page">
+
+  <div class="container-fluid add-form-list">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-block card-stretch card-height">
+          <div
+            class="
+              card-header
+              d-flex
+              align-items-center
+              justify-content-between
+            "
+          >
+            <div class="header-title">
+              <h4 class="card-title">Other Link</h4>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top: 0px">
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <a
+                    href="{% url 'checkIPRedirect' %}"
+                    class="btn btn-primary mt-5"
+                    >Check IP</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container-fluid add-form-list">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-block card-stretch card-height">
+          <div
+            class="
+              card-header
+              d-flex
+              align-items-center
+              justify-content-between
+            "
+          >
+            <div class="header-title">
+              <h4 class="card-title">Product Stats</h4>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top: 0px">
+            <ul class="nav nav-tabs" id="myTab-1" role="tablist">
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  id="home-tab"
+                  data-toggle="tab"
+                  href="#home"
+                  role="tab"
+                  aria-controls="home"
+                  aria-selected="true"
+                  ><button
+                    type="button"
+                    style="padding: 1px 274px"
+                    class="tab1 btn btn-primary rounded-pill mt-2"
+                  >
+                    ISSUED
+                  </button></a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  id="profile-tab"
+                  data-toggle="tab"
+                  href="#profile"
+                  role="tab"
+                  aria-controls="profile"
+                  aria-selected="false"
+                  ><button
+                    type="button"
+                    style="padding: 1px 274px"
+                    class="tab1 btn btn-success rounded-pill mt-2"
+                  >
+                    IN HAND
+                  </button></a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  id="contact-tab"
+                  data-toggle="tab"
+                  href="#contact"
+                  role="tab"
+                  aria-controls="contact"
+                  aria-selected="false"
+                  ><button
+                    type="button"
+                    style="padding: 1px 274px"
+                    class="tab1 btn btn-danger rounded-pill mt-2"
+                  >
+                    UnHealthy
+                  </button></a
+                >
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent-2">
+              <div
+                class="tab-pane fade show active"
+                id="home"
+                role="tabpanel"
+                aria-labelledby="home-tab"
+              >
+                <p>ISSUED DATA.</p>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="profile"
+                role="tabpanel"
+                aria-labelledby="profile-tab"
+              >
+                <p>IN STOCK.</p>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="contact"
+                role="tabpanel"
+                aria-labelledby="contact-tab"
+              >
+                <p>UNHEALTHY.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid add-form-list">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-block card-stretch card-height">
+          <div
+            class="
+              card-header
+              d-flex
+              align-items-center
+              justify-content-between
+            "
+          >
+            <div class="header-title">
+              <h4 class="card-title">Product Allotment Report</h4>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top: 0px">
+            <ul class="nav nav-tabs" id="myTab-1" role="tablist">
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  id="courtsection-tab"
+                  data-toggle="tab"
+                  href="#courtsection"
+                  role="tab"
+                  aria-controls="courtsection"
+                  aria-selected="true"
+                  ><button
+                    type="button"
+                    style="padding: 1px 274px"
+                    class="tab1 btn btn-primary rounded-pill mt-2"
+                  >
+                    Court/Section Wise Report
+                  </button></a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  id="user-tab"
+                  data-toggle="tab"
+                  href="#user"
+                  role="tab"
+                  aria-controls="user"
+                  aria-selected="false"
+                  ><button
+                    type="button"
+                    style="padding: 1px 274px"
+                    class="tab1 btn btn-success rounded-pill mt-2"
+                  >
+                    User Wise Report
+                  </button></a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  id="product-tab"
+                  data-toggle="tab"
+                  href="#productdet"
+                  role="tab"
+                  aria-controls="product"
+                  aria-selected="false"
+                  ><button
+                    type="button"
+                    style="padding: 1px 274px"
+                    class="tab1 btn btn-danger rounded-pill mt-2"
+                  >
+                    Product Wise Report
+                  </button></a
+                >
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent-2">
+              <div
+                class="tab-pane fade show active"
+                id="courtsection"
+                role="tabpanel"
+                aria-labelledby="courtsection-tab"
+              >
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Court/Section*</label>
+                      <div class="search_select_box">
+                        <select
+                          name="sectionid"
+                          id="sectionid"
+                          class="selectpicker form-control"
+                          data-style="py-0"
+                          data-live-search="true"
+                        >
+                          <option selected="true" disabled="disabled">
+                            -- Select --
+                          </option>
+                          {%for pdlist in list_all_sc%}
+                          <!-- <option value="{{pdlist.product_cat_id.product_cat_id}}">{{pdlist.product_cat_id.product_cat_name}} :-: [ {{pdlist.product_cat_id.product_type}} ]</option>    -->
+                          <option value="{{pdlist.section_id}}">
+                            {{pdlist.section_name}}
+                          </option>
+                          {%endfor%}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <label>&nbsp;</label>
+                    <div class="form-group">
+                      <button
+                        type="submit"
+                        id="dbdatasubButton"
+                        class="mt-2 btn btn-success"
+                        onclick="getCourtSectionWiseData()"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="user"
+                role="tabpanel"
+                aria-labelledby="user-tab"
+              >
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>User Name*</label>
+                      <div class="search_select_box">
+                        <select
+                          name="userid"
+                          id="userid"
+                          class="selectpicker form-control"
+                          data-style="py-0"
+                          data-live-search="true"
+                        >
+                          <option selected="true" disabled="disabled">
+                            -- Select --
+                          </option>
+                          {%for usrlist in list_all_usr%}
+                          <!-- <option value="{{pdlist.product_cat_id.product_cat_id}}">{{pdlist.product_cat_id.product_cat_name}} :-: [ {{pdlist.product_cat_id.product_type}} ]</option>    -->
+                          <option value="{{usrlist.usr_id}}">
+                            {{usrlist.usr_name}}
+                          </option>
+                          {%endfor%}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <label>&nbsp;</label>
+                    <div class="form-group">
+                      <button
+                        type="submit"
+                        id="subButton"
+                        class="mt-2 btn btn-success"
+                        onclick="getUsersWiseData()"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="productdet"
+                role="tabpanel"
+                aria-labelledby="product-tab"
+              >
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Product*</label>
+                      <div class="search_select_box">
+                        <select
+                          name="productid"
+                          id="productid"
+                          class="selectpicker form-control"
+                          data-style="py-0"
+                          data-live-search="true"
+                        >
+                          <option selected="true" disabled="disabled">
+                            -- Select --
+                          </option>
+                          {%for prlist in list_all_pro%}
+                          <!-- <option value="{{pdlist.product_cat_id.product_cat_id}}">{{pdlist.product_cat_id.product_cat_name}} :-: [ {{pdlist.product_cat_id.product_type}} ]</option>    -->
+                          <option value="{{prlist.product_id}}">
+                            {{prlist.product_mod.product_com.product_cat.product_cat_name}}
+                            -> {{prlist.product_mod.product_mod_name}} ->
+                            {{prlist.product_serialno}}
+                          </option>
+                          {%endfor%}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <label>&nbsp;</label>
+                    <div class="form-group">
+                      <button
+                        type="submit"
+                        id="subButton"
+                        class="mt-2 btn btn-success"
+                        onclick="getProductList()"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            
+             <!-- <input type="text" id="udata" /> -->
+            <div id="tempdataholder"><input type="hidden" id="total_data" /><input type="hidden" id="csname" /></div>         
+            <div class="col-md-12 text-center" id="dashboarddatakeeper">
+              <!-- This will Hold All the datatable with data return from python -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid add-form-list">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-block card-stretch card-height">
+          <div
+            class="card-header
+              d-flex
+              align-items-center
+              justify-content-between
+            "
+          >
+            <div class="header-title">
+              <h4 class="card-title">Product Allotment Report</h4>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top: 0px">                              
+             <!-- <input type="text" id="udata" /> -->
+            <div id="tempdataholder"><input type="hidden" id="total_data" /><input type="hidden" id="csname" /></div>         
+            <div class="col-md-12 text-center" id="dashboarddatakeeper">
+              <!-- This will Hold All the datatable with data return from python -->
+              jhkhjk
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function courtSectionSummaryData() {
+    $.ajax({
+      type: "GET",
+      url: "/getCourtSectionSummaryData",
+      success: function (data) {
+        $("#sumdatakeeper").html(data.tabdata);
+        // $("#sumdatakeeper tr:last").before(data.tabdata);
+      },
+      complete: function () {
+        $("#sumtabdata").DataTable({
+          destroy: true,
+          buttons: [
+            {
+              extend: "pdfHtml5",
+              orientation: "landscape",
+            },
+            {
+              extend: "excelHtml5",
+            },
+          ],
+          dom: "Bfrtip",
+          bPaginate: false,
+          ScrollCollapse: true,
+        });
+      },
+    });
+  }
+
+  // window.onload = courtSectionSummaryData;
+
+  function getAllCourtData() {
+    sectionid = $("#sectionid").val();
+    $.ajax({
+      type: "GET",
+      url: "/getCourtSectionWiseData",
+      data: {
+        sectionid: sectionid,
+        source: "head",
+      },
+      success: function (data) {
+        $("#dashboarddatakeeper").html(data.all_table);
+        $("#total_data").val(data.data_count);
+        $("#csname").val(data.csname);
+        let a =
+          "<label>Court/Section Name : </label>" +
+          "  " +
+          "<label style='color: crimson;'>" +
+          data.csname +
+          "</label>";
+        $("#cshead").html(a);
+        f = data.flag;
+        if (f == 0) {
+          document.getElementById("courtdata").style.display = "block";
+          document.getElementById("courtsumdata").style.display = "none";
+        } else {
+          document.getElementById("courtdata").style.display = "none";
+          document.getElementById("courtsumdata").style.display = "block";
+        }
+      },
+      complete: function () {
+        for (let i = 1; i <= $("#total_data").val(); i++) {
+          $("#datakeeper" + i).DataTable({
+            destroy: true,
+            buttons: [
+              {
+                extend: "pdfHtml5",
+                orientation: "landscape",
+                title:
+                  "Court/Section Name :- " +
+                  $("#csname").val() +
+                  "\n\n" +
+                  $("#udata" + (i - 1)).val(),
+              },
+              {
+                extend: "excelHtml5",
+                title:
+                  "Court/Section Name :- " +
+                  $("#csname").val() +
+                  "\n\n" +
+                  $("#udata" + (i - 1)).val(),
+              },
+            ],
+            dom: "Bfrtip",
+            bPaginate: false,
+            ScrollCollapse: true,
+          });
+        }
+      },
+    });
+  }
+
+  function getCourtSectionWiseData() {
+    sectionid = $("#sectionid").val();
+    $.ajax({
+      type: "GET",
+      url: "/getCourtSectionWiseData",
+      data: {
+        sectionid: sectionid,
+      },
+      success: function (data) {
+        $("#dashboarddatakeeper").html(data.all_table);
+        $("#total_data").val(data.data_count);
+        $("#csname").val(data.csname);
+        // $("#udata").val(data.udata);
+      },
+      complete: function () {
+        for (let i = 1; i <= $("#total_data").val(); i++) {
+          $("#datakeeper" + i).DataTable({
+            destroy: true,
+            buttons: [
+              {
+                extend: "pdfHtml5",
+                orientation: "landscape",
+                title:
+                  "Court/Section Name :- " +
+                  $("#csname").val() +
+                  "\n\n" +
+                  $("#udata" + (i - 1)).val(),
+              },
+              {
+                extend: "excelHtml5",
+                title:
+                  "Court/Section Name :- " +
+                  $("#csname").val() +
+                  "\n\n" +
+                  $("#udata" + (i - 1)).val(),
+              },
+            ],
+            dom: "Bfrtip",
+            bPaginate: false,
+            ScrollCollapse: true,
+          });
+        }
+      },
+    });
+  }
+  function getUsersWiseData() {
+    userid = $("#userid").val();
+    $.ajax({
+      type: "GET",
+      url: "/getUsersWiseData",
+      data: {
+        userid: userid,
+      },
+      success: function (data) {
+        $("#dashboarddatakeeper").html(data.tabdata);
+      },
+    });
+  }
+  function getProductList() {
+    productid = $("#productid").val();
+    $.ajax({
+      type: "GET",
+      url: "/getProductList",
+      data: {
+        productid: productid,
+      },
+      success: function (data) {
+        $("#dashboarddatakeeper").html(data.tabdata);
+      },
+    });
+  }
+</script>
+{% endblock %}

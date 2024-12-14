@@ -1,0 +1,136 @@
+{% extends "home.html" %} {% block userDesignation %}
+<form action="{% url 'IntSectionDesigMapSubmit' %}" data-toggle="validator" method="post">
+    {% csrf_token %}
+<div class="content-page">
+  <div class="container-fluid add-form-list">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+            <div class="header-title" style="text-align: center">
+              <h4 class="card-title">
+                Section Designation Mapper
+              </h4>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-5">                
+                <div class="form-group">
+                  <label>Section Type *</label>
+                  <select
+                  name="sectionType"
+                  id="sectionType"
+                  class="selectpicker form-control"
+                  data-style="py-0" onchange="getSectionName()"
+                  >
+                  <option selected="true" disabled="disabled">--- Select ---</option>
+                  <option value="Court">Court</option>
+                  <option value="Section">Section</option>                  
+                  </select>
+                </div>           
+              </div>
+              <div class="col-md-5">                
+                <div class="form-group">
+                  <label>Section *</label>
+                  <select
+                    name="sectionname"
+                    id="sectionname"
+                    class="selectpicker form-control"
+                    data-style="py-0" data-live-search="true"
+                    >
+                    <option selected="true" disabled="disabled">--- Select ---</option>
+                    {%for lclist in list_of_loc%}                      
+                      <option value="{{lclist.section_id}}">{{lclist.section_name}}</option>   
+                    {%endfor%}
+                  </select>
+                </div>
+              </div>            
+              <div class="col-md-2">
+              <div class="form-group">
+                <br>
+                <button type="submit" class="btn btn-primary mt-2">Submit</button>
+              </div>
+            </div>
+          </div>     
+</form>
+            <form action="{% url 'assignSectionDesigMap' %}" data-toggle="validator" method="post">
+              {% csrf_token %}       
+            <div class="col-md-12 text-center">              
+                <table class="table" >
+                  <thead>
+                    <tr class="ligth">
+                      <th scope="col">Sno</th>
+                      <th scope="col">Product Category</th>
+                      <th scope="col">Product Name</th>
+                      <th scope="col">Section Name</th>                      
+                      <th scope="col">Designation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {%for pt in protran%}
+                    <tr>  
+                      <input type="hidden" name="transid" value="{{pt.pro_trans_id}}"> 
+                      <input type="text" name="sdmid" value="{{pt.sdm.section.section_id}}">                   
+                      <td>{{forloop.counter}}</td>
+                      <td>{{pt.20}}</td>
+                      <td>Company :- {{pt.22}} <br> Model:- {{pt.24}} <br> Serial No :- {{pt.26}}</td>
+                      <td>{{pt.35}} </td>
+                      <td>                        
+                        <div class="form-group">                            
+                          <select name="staffdesid" id="staffdesid" class="form-control"  >
+                              <option selected="true" disabled="disabled">-- Designation--</option>   
+                              {%for deslist in list_of_des%}                                                        
+                                <option value="{{deslist.staff_id}}">{{deslist.staff_des_name}}</option>   
+                              {%endfor%}                                                                  
+                          </select>                              
+                        </div>                         
+                      </td>
+                    </tr>  
+                  {%endfor%} 
+                  <tr>
+                    <td colspan="5">
+                      <div class="col-md-12">
+                          <div class="form-group text-center">                       
+                            <button type="submit" id="subButton" class="mt-2 btn btn-success">Submit</button>
+                          </div>
+                        </div>
+                    </td>
+                  </tr>                        
+                  </tbody>
+                </table>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+ <script>
+  function selectStaffOf() {
+   usrdestype = $("#usrdestype option:selected").val();
+   alert(usrdestype);
+   if (usrdestype == "Staff")
+    document.getElementById("staffof").style.display = "block";
+   else document.getElementById("staffof").style.display = "none";
+  }
+  function getSectionName(){
+            sectionType=$('#sectionType').val();            
+            $.ajax({
+                type:"GET",
+                url: "/issueSectionDetailsFilter",
+                data:{
+                    issueto: sectionType
+                },
+                success: function(data) 
+                {
+                $('#sectionname').html(data);
+                $('#sectionname').selectpicker('refresh');
+              }
+            })
+        }
+ </script>
+ {% endblock %}
+</div>
